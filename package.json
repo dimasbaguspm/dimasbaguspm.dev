@@ -14,23 +14,20 @@
     "format": "oxfmt src"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.2.0",
-    "@astrojs/node": "^9.1.0",
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.3.0",
-    "astro": "^5.5.0",
-    "shiki": "^3.2.0"
+    "@astrojs/mdx": "4.3.14",
+    "@astrojs/node": "9.5.5",
+    "@astrojs/rss": "4.0.19",
+    "@astrojs/sitemap": "3.7.3",
+    "astro": "5.18.2",
+    "shiki": "3.23.0"
   },
   "devDependencies": {
-    "@types/node": "^22.13.0",
-    "oxfmt": "^0.13.0",
-    "oxlint": "^1.2.0",
-    "typescript": "^5.7.0"
+    "@types/node": "22.20.1",
+    "oxfmt": "0.13.0",
+    "oxlint": "1.79.0",
+    "typescript": "5.9.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
-    ]
+    "onlyBuiltDependencies": ["esbuild", "sharp"]
   }
 }
