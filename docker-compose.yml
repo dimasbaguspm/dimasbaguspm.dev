@@ -1,0 +1,26 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4321
+      OIDC_ISSUER: ${OIDC_ISSUER}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_ALLOWED_SUBS: ${OIDC_ALLOWED_SUBS}
+      SITE_URL: ${SITE_URL}
+      SESSION_SECRET: ${SESSION_SECRET}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_REPO: ${GITHUB_REPO}
+      GITHUB_CONTENT_BRANCH: ${GITHUB_CONTENT_BRANCH}
+      GITHUB_BRANCH: ${GITHUB_BRANCH}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dimasbaguspm-dev.rule=Host(`dimasbaguspm.dev`)
+      - traefik.http.routers.dimasbaguspm-dev.entrypoints=websecure
+      - traefik.http.routers.dimasbaguspm-dev.tls.certresolver=letsencrypt
+      - traefik.http.services.dimasbaguspm-dev.loadbalancer.server.port=4321
+    restart: unless-stopped
