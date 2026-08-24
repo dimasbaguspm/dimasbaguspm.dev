@@ -1,15 +1,15 @@
-// Read/write highlighted project entries as JSON files under src/content/projects.
-// Schemas are defined in src/content.config.ts (the `projects` collection). Writes
-// by the admin API must keep the same shape the collection expects.
+// Projects content store backed by GitHub (Phase 7). JSON files in
+// src/content/projects on the GITHUB_CONTENT_BRANCH. Schema matches the `projects`
+// data collection in src/content.config.ts.
 
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const PROJECTS_DIR = process.env.CONTENT_DIR
-  ? path.join(process.env.CONTENT_DIR, "projects")
-  : path.resolve(__dirname, "../../content/projects");
+import {
+  getGithubConfig,
+  getFile,
+  putFile,
+  deleteFile,
+  listDir,
+} from "./github";
+import type { GithubConfig } from "./github";
 
 export interface ProjectInput {
   name: string;
@@ -21,6 +21,8 @@ export interface ProjectInput {
   featured?: boolean;
 }
 
+const DIR = "src/content/projects";
+
 function slugify(name: string): string {
   return (
     name
@@ -31,39 +33,33 @@ function slugify(name: string): string {
   );
 }
 
-function safeFile(name: string): string {
-  const base = path.basename(name).replace(/[^a-zA-Z0-9._-]/g, "_");
-  if (!base.endsWith(".json")) return `${base}.json`;
-  return base;
+export async function listProjects(
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<ProjectInput[]> {
+  const entries = await listDir(cfg, DIR);
+  const out: ProjectInput[] = [];
+  for (const e of entries.filter((x) => x.name.endsWith(".json"))) {
+    const f = await getFile(cfg, e.path);
+    if (f) out.push(JSON.parse(f.content) as ProjectInput);
+  }
+  return out.sort((a, b) => a.order - b.order);
 }
 
-export function listProjects(): ProjectInput[] {
-  if (!fs.existsSync(PROJECTS_DIR)) return [];
-  return fs
-    .readdirSync(PROJECTS_DIR)
-    .filter((f) => f.endsWith(".json"))
-    .map(
-      (f) =>
-        JSON.parse(
-          fs.readFileSync(path.join(PROJECTS_DIR, f), "utf8"),
-        ) as ProjectInput,
-    );
+export async function getProject(
+  slug: string,
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<ProjectInput | null> {
+  const file = await getFile(cfg, `${DIR}/${slug}.json`);
+  return file ? (JSON.parse(file.content) as ProjectInput) : null;
 }
 
-export function getProject(slug: string): ProjectInput | null {
-  const file = safeFile(slug);
-  const p = path.join(PROJECTS_DIR, file);
-  if (!fs.existsSync(p)) return null;
-  return JSON.parse(fs.readFileSync(p, "utf8")) as ProjectInput;
-}
-
-export function writeProject(input: ProjectInput): {
-  slug: string;
-  file: string;
-} {
+export async function writeProject(
+  input: ProjectInput,
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<{ slug: string }> {
   const slug = slugify(input.name);
-  const file = path.join(PROJECTS_DIR, `${slug}.json`);
-  fs.mkdirSync(PROJECTS_DIR, { recursive: true });
+  const path = `${DIR}/${slug}.json`;
   const data: ProjectInput = {
     name: input.name,
     url: input.url,
@@ -73,15 +69,34 @@ export function writeProject(input: ProjectInput): {
     tags: Array.isArray(input.tags) ? input.tags : [],
     featured: Boolean(input.featured),
   };
-  fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n", "utf8");
-  return { slug, file };
+  const existing = await getFile(cfg, path);
+  await putFile(
+    cfg,
+    path,
+    JSON.stringify(data, null, 2) + "\n",
+    `${existing ? "Update" : "Add"} project: ${input.name}`,
+    existing?.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return { slug };
 }
 
-export function deleteProject(slug: string): boolean {
-  const file = path.join(PROJECTS_DIR, safeFile(slug));
-  if (fs.existsSync(file)) {
-    fs.unlinkSync(file);
-    return true;
-  }
-  return false;
+export async function deleteProject(
+  slug: string,
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<boolean> {
+  const path = `${DIR}/${slug}.json`;
+  const existing = await getFile(cfg, path);
+  if (!existing) return false;
+  await deleteFile(
+    cfg,
+    path,
+    `Delete project: ${slug}`,
+    existing.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return true;
 }

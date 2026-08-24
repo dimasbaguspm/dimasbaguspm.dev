@@ -1,19 +1,16 @@
-// Read/write Markdown (MDX) article files under src/content/articles.
-// Frontmatter is serialized as YAML by hand (no heavy dep) and the body is
-// preserved verbatim. Used by the admin API routes (server-side only).
+// Article content store backed by GitHub (Phase 7). Markdown/MDX files live in
+// src/content/articles on the GITHUB_CONTENT_BRANCH; saving commits to the repo
+// and a "Publish" merges into main → rebuild. The static build still reads local
+// files via Astro's content collections; this module is for the admin API.
 
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-// Articles are read/written from CONTENT_DIR (absolute, set in prod to the
-// mounted content volume, e.g. /data/content/articles). Falls back to the
-// repo's src/content/articles so dev and tests work without config.
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_ARTICLES = path.resolve(__dirname, "../../content/articles");
-const ARTICLES_DIR = process.env.CONTENT_DIR
-  ? path.join(process.env.CONTENT_DIR, "articles")
-  : DEFAULT_ARTICLES;
+import {
+  getGithubConfig,
+  getFile,
+  putFile,
+  deleteFile,
+  listDir,
+} from "./github";
+import type { GithubConfig } from "./github";
 
 export interface ArticleInput {
   title: string;
@@ -29,13 +26,12 @@ export interface ArticleInput {
 }
 
 function yamlString(v: string): string {
-  // quote if it contains characters that would break YAML
   if (/[:#\-?[\]{}",\n]/.test(v) || v.trim() !== v) return JSON.stringify(v);
   return v;
 }
 
 function serializeFrontmatter(a: ArticleInput): string {
-  const lines: string[] = ["---"];
+  const lines = ["---"];
   lines.push(`title: ${yamlString(a.title)}`);
   lines.push(`description: ${yamlString(a.description)}`);
   lines.push(`pubDate: ${a.pubDate}`);
@@ -58,39 +54,25 @@ export function slugify(title: string): string {
     .slice(0, 80);
 }
 
-export function articlePath(slug: string): string {
-  const safe = slug.replace(/[^a-z0-9._-]/gi, "");
-  return path.join(ARTICLES_DIR, `${safe}.mdx`);
+const DIR = "src/content/articles";
+
+export async function listArticleSlugs(
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<string[]> {
+  const entries = await listDir(cfg, DIR);
+  return entries
+    .filter((e) => e.name.endsWith(".mdx"))
+    .map((e) => e.name.replace(/\.mdx$/, ""))
+    .sort();
 }
 
-export function writeArticle(slug: string, a: ArticleInput): string {
-  fs.mkdirSync(ARTICLES_DIR, { recursive: true });
-  const file = articlePath(slug);
-  fs.writeFileSync(
-    file,
-    `${serializeFrontmatter(a)}\n\n${a.body.trim()}\n`,
-    "utf8",
-  );
-  return file;
-}
-
-export function deleteArticle(slug: string): boolean {
-  const file = articlePath(slug);
-  if (fs.existsSync(file)) {
-    fs.unlinkSync(file);
-    return true;
-  }
-  return false;
-}
-
-export interface ParsedArticle extends ArticleInput {
-  slug: string;
-}
-
-export function readArticle(slug: string): ParsedArticle | null {
-  const file = articlePath(slug);
-  if (!fs.existsSync(file)) return null;
-  const raw = fs.readFileSync(file, "utf8");
+export async function readArticle(
+  slug: string,
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<(ArticleInput & { slug: string }) | null> {
+  const file = await getFile(cfg, `${DIR}/${slug}.mdx`);
+  if (!file) return null;
+  const raw = file.content;
   const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m)
     return {
@@ -125,11 +107,7 @@ export function readArticle(slug: string): ParsedArticle | null {
     description: get("description") ?? "",
     pubDate: get("pubDate") ?? "",
     updatedDate: get("updatedDate"),
-    tags: Array.isArray(tagsRaw)
-      ? tagsRaw
-      : typeof tagsRaw === "string"
-        ? [tagsRaw]
-        : [],
+    tags: typeof tagsRaw === "string" ? [tagsRaw] : [],
     draft: get("draft") === "true",
     cover: get("cover"),
     canonical: get("canonical"),
@@ -138,10 +116,42 @@ export function readArticle(slug: string): ParsedArticle | null {
   };
 }
 
-export function listArticleSlugs(): string[] {
-  if (!fs.existsSync(ARTICLES_DIR)) return [];
-  return fs
-    .readdirSync(ARTICLES_DIR)
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => f.replace(/\.mdx$/, ""));
+export async function writeArticle(
+  slug: string,
+  a: ArticleInput,
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<{ slug: string }> {
+  const path = `${DIR}/${slug}.mdx`;
+  const content = `${serializeFrontmatter(a)}\n\n${a.body.trim()}\n`;
+  const existing = await getFile(cfg, path);
+  await putFile(
+    cfg,
+    path,
+    content,
+    `${existing ? "Update" : "Add"} article: ${a.title}`,
+    existing?.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return { slug };
+}
+
+export async function deleteArticle(
+  slug: string,
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<boolean> {
+  const path = `${DIR}/${slug}.mdx`;
+  const existing = await getFile(cfg, path);
+  if (!existing) return false;
+  await deleteFile(
+    cfg,
+    path,
+    `Delete article: ${slug}`,
+    existing.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return true;
 }
