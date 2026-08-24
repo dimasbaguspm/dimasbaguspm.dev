@@ -1,0 +1,9 @@
+{
+  "name": "bundlestate",
+  "url": "https://bundlestate.dev",
+  "repo": "https://github.com/dimasbaguspm/bundlestate",
+  "blurb": "Frontend bundle inspector — upload a .zip build and see size, treemap, and import graphs.",
+  "order": 1,
+  "tags": ["web", "tooling"],
+  "featured": true
+}

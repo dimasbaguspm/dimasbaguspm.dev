@@ -1,0 +1,24 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+export const prerender = true;
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Projects">
+  <h1>Projects</h1>
+  <ul class="cards">
+    {projects.map((p) => (
+      <li class="card">
+        <h2><a href={p.data.url}>{p.data.name}</a></h2>
+        <p>{p.data.blurb}</p>
+        {p.data.tags.length > 0 && <p class="tags">{p.data.tags.join(", ")}</p>}
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .cards { list-style: none; padding: 0; display: grid; gap: 1rem; }
+  .card h2 { margin: 0 0 0.3rem; font-size: 1.2rem; }
+  .tags { color: var(--muted); font-size: 14px; }
+</style>
