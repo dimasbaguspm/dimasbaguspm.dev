@@ -22,12 +22,16 @@
     "shiki": "3.23.0"
   },
   "devDependencies": {
+    "@astrojs/check": "0.9.4",
     "@types/node": "22.20.1",
     "oxfmt": "0.13.0",
     "oxlint": "1.79.0",
     "typescript": "5.9.3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
