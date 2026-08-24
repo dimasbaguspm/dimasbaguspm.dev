@@ -15,10 +15,9 @@ enforces squash-only + Verify-green.
 - **Phase 3** (`feat/phase3-admin-articles`): Admin article editor (list/create/
   edit/delete MDX), draft toggle, publish (writes Markdown to content dir). ✅ done.
 - **Phase 4** (`feat/phase4-admin-assets`): Asset upload (images/files) to
-  mounted volume, list/delete, insert into editor.
-- **Phase 5** (`feat/phase5-admin-projects`): Highlighted projects CRUD (JSON).
-- **Phase 6** (`feat/phase6-deploy`): Dockerfile + docker-compose + Caddy
-  reverse proxy (ACME TLS) + deploy docs; Authentik app registration notes.
+  mounted volume, list/delete, manager UI. ✅ done (PR #4).
+- **Phase 5** (`feat/phase5-admin-projects`): Highlighted projects CRUD (JSON). ✅ done (PR #5).
+- **Phase 6** (`feat/phase6-deploy`): Docker + Caddy deploy — **DROPPED** per user.
 
 ## Stacking rule
 Each phase branch is cut from `main` AFTER the previous phase is squash-merged.

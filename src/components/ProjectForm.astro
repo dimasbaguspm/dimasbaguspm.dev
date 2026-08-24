@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+
+interface Props {
+  isEdit: boolean;
+  p?: {
+    name: string; url: string; repo?: string; blurb: string;
+    order: number; tags?: string[]; featured?: boolean;
+  };
+}
+const { isEdit, p } = Astro.props;
+const title = isEdit ? "Edit project" : "New project";
+---
+
+<Base title={`${title} · Admin`} description={title}>
+  <main class="admin">
+    <nav class="crumbs"><a href="/admin/projects">Projects</a> / <span>{title}</span></nav>
+    <h1>{title}</h1>
+    <form id="pf" class="card">
+      <label>Name<input name="name" value={p?.name ?? ""} required /></label>
+      <label>URL<input name="url" type="url" value={p?.url ?? ""} required /></label>
+      <label>Repo (optional)<input name="repo" value={p?.repo ?? ""} /></label>
+      <label>Order<input name="order" type="number" value={p?.order ?? 0} /></label>
+      <label>Tags (comma separated)<input name="tags" value={p?.tags?.join(", ") ?? ""} /></label>
+      <label>Blurb<textarea name="blurb" rows="3">{p?.blurb ?? ""}</textarea></label>
+      <label class="check"><input type="checkbox" name="featured" checked={p?.featured ?? false} /> Featured</label>
+      <div class="actions">
+        <button type="submit">{isEdit ? "Save" : "Create"}</button>
+        {isEdit && <button type="button" id="del">Delete</button>}
+        <a href="/admin/projects">Cancel</a>
+      </div>
+      <p id="msg" class="msg"></p>
+    </form>
+  </main>
+
+  <script is:inline define:vars={{ isEdit, slug: p?.name ? Astro.params.slug : undefined }}>
+    const form = document.getElementById("pf");
+    const msg = document.getElementById("msg");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const payload = {
+        name: fd.get("name"),
+        url: fd.get("url"),
+        repo: fd.get("repo") || undefined,
+        blurb: fd.get("blurb"),
+        order: Number(fd.get("order")) || 0,
+        tags: String(fd.get("tags") || "").split(",").map((t) => t.trim()).filter(Boolean),
+        featured: fd.get("featured") === "on",
+      };
+      const method = isEdit ? "PUT" : "POST";
+      const url = isEdit ? `/api/projects/${slug}` : "/api/projects";
+      const res = await fetch(url, {
+        method,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json().catch(() => ({}));
+      msg.textContent = res.ok ? "Saved" : `Error: ${data.message || res.status}`;
+      if (res.ok) setTimeout(() => (location.href = "/admin/projects"), 600);
+    });
+    const del = document.getElementById("del");
+    if (del) del.addEventListener("click", async () => {
+      if (!confirm("Delete this project?")) return;
+      const res = await fetch(`/api/projects/${slug}`, { method: "DELETE" });
+      if (res.ok) location.href = "/admin/projects";
+    });
+  </script>
+</Base>
+
+<style>
+  .admin { max-width: 640px; margin: 0 auto; padding: 2rem 1rem; }
+  .crumbs a { color: inherit; }
+  .card { display: grid; gap: 0.8rem; border: 1px solid #333; border-radius: 10px; padding: 1.25rem; }
+  label { display: grid; gap: 0.3rem; font-size: 0.9rem; }
+  label.check { display: flex; gap: 0.5rem; align-items: center; }
+  input, textarea { padding: 0.5rem; border: 1px solid #444; border-radius: 6px; background: #111; color: inherit; font: inherit; }
+  .actions { display: flex; gap: 0.6rem; align-items: center; }
+  .msg { min-height: 1rem; color: #6cf; }
+  button { cursor: pointer; border: 1px solid #444; background: #1a1a1a; color: inherit; border-radius: 6px; padding: 0.45rem 0.9rem; }
+  button:hover { border-color: #888; }
+</style>

@@ -1,0 +1,49 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { readSession } from "../../../lib/session";
+import { getCollection } from "astro:content";
+
+export const prerender = false;
+
+const cookie = Astro.request.headers.get("cookie") ?? undefined;
+const session = await readSession(cookie);
+if (!session) return Astro.redirect("/admin/login", 302);
+
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base title="Projects · Admin" description="Manage highlighted projects">
+  <main class="admin">
+    <header class="top">
+      <h1>Projects</h1>
+      <a class="btn primary" href="/admin/projects/new">+ New project</a>
+    </header>
+    {projects.length === 0 ? (
+      <p class="empty">No projects yet.</p>
+    ) : (
+      <ul class="list">
+        {projects.map((p) => (
+          <li>
+            <a href={`/admin/projects/${p.id}/edit`} class="title">{p.data.name}</a>
+            <span class="meta">
+              {p.data.featured && <em class="feat">featured</em>}
+              {p.data.url}
+            </span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </main>
+</Base>
+
+<style>
+  .admin { max-width: 720px; margin: 0 auto; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .btn { display: inline-block; padding: 0.45rem 0.9rem; border: 1px solid #d0d5dd; border-radius: 8px; text-decoration: none; }
+  .primary { background: var(--accent); color: #fff; border-color: var(--accent); margin: 1rem 0; }
+  .list { list-style: none; padding: 0; }
+  .list li { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #eee; }
+  .title { font-weight: 600; text-decoration: none; }
+  .meta { color: var(--muted); font-size: 14px; display: flex; gap: 0.5rem; align-items: center; }
+  .feat { color: #1d4ed8; font-style: normal; font-weight: 600; }
+</style>
