@@ -24,6 +24,7 @@ const articles = (await getCollection("articles")).sort(
     </header>
 
     <a class="btn primary" href="/admin/articles/new">+ New article</a>
+    <a class="btn" href="/admin/assets">Assets</a>
 
     <h2>Articles</h2>
     {articles.length === 0 ? (
