@@ -1,0 +1,68 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  type?: "website" | "article";
+}
+const {
+  title,
+  description = "Personal blog of Dimas Bagus Putra Mahottama — engineering, notes, and projects.",
+  canonical,
+  type = "website",
+} = Astro.props;
+const site = Astro.site?.toString() ?? "https://dimasbaguspm.dev";
+const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": type === "article" ? "Article" : "WebSite",
+      name: title,
+      headline: title,
+      description,
+      url: canonicalUrl,
+    })} />
+  </head>
+  <body>
+    <header>
+      <nav class="nav">
+        <a href="/">dimasbaguspm.dev</a>
+        <span class="links">
+          <a href="/articles">Articles</a>
+          <a href="/projects">Projects</a>
+        </span>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>© {new Date().getFullYear()} Dimas Bagus Putra Mahottama</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root { --accent: #2f6f4f; --fg: #1a1a1a; --muted: #6b7280; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: var(--fg); background: #fff; }
+  .nav { display: flex; justify-content: space-between; max-width: 720px; margin: 0 auto; padding: 1.2rem 1rem; }
+  .nav a { color: var(--fg); text-decoration: none; font-weight: 600; }
+  .nav .links a { margin-left: 1rem; font-weight: 400; color: var(--muted); }
+  main { max-width: 720px; margin: 0 auto; padding: 1rem; }
+  footer { max-width: 720px; margin: 2rem auto; padding: 1rem; color: var(--muted); font-size: 14px; }
+  a { color: var(--accent); }
+</style>

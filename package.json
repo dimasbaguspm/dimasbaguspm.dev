@@ -1,0 +1,36 @@
+{
+  "name": "dimasbaguspm.dev",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "oxlint src",
+    "format": "oxfmt src"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.0",
+    "@astrojs/node": "^9.1.0",
+    "@astrojs/rss": "^4.0.11",
+    "@astrojs/sitemap": "^3.3.0",
+    "astro": "^5.5.0",
+    "shiki": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.0",
+    "oxfmt": "^0.13.0",
+    "oxlint": "^1.2.0",
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+export const prerender = true;
+const articles = (await getCollection("articles", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+---
+<Base title="Articles">
+  <h1>Articles</h1>
+  <ul class="posts">
+    {articles.map((a) => (
+      <li>
+        <a href={`/articles/${a.slug}`}>{a.data.title}</a>
+        <time datetime={a.data.pubDate.toISOString()}>
+          {a.data.pubDate.toISOString().slice(0, 10)}
+        </time>
+        <p class="desc">{a.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .posts { list-style: none; padding: 0; }
+  .posts li { margin: 1.2rem 0; }
+  .desc { color: var(--muted); margin: 0.3rem 0 0; }
+</style>

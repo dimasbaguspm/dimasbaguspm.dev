@@ -1,0 +1,35 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const articles = await getCollection("articles", ({ data }) => !data.draft);
+  return articles.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+type Props = { entry: CollectionEntry<"articles"> };
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, description, pubDate, updatedDate, tags, canonical, author } = entry.data;
+---
+<Base title={title} description={description} canonical={canonical} type="article">
+  <article class="post">
+    <header>
+      <h1>{title}</h1>
+      <time datetime={pubDate.toISOString()}>{pubDate.toISOString().slice(0, 10)}</time>
+      {updatedDate && <span> · updated {updatedDate.toISOString().slice(0, 10)}</span>}
+      {tags.length > 0 && <p class="tags">{tags.join(", ")}</p>}
+    </header>
+    <Content />
+    <footer class="byline">Written by {author}</footer>
+  </article>
+</Base>
+
+<style>
+  .post header h1 { font-size: 2rem; margin-bottom: 0.2rem; }
+  .tags { color: var(--muted); font-size: 14px; }
+  .byline { margin-top: 2rem; color: var(--muted); font-size: 14px; }
+  .post :global(pre) { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow: auto; }
+  .post :global(code) { font-family: ui-monospace, monospace; }
+</style>
