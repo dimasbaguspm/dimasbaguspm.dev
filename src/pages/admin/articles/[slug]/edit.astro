@@ -1,0 +1,16 @@
+---
+import ArticleForm from "../../../../components/ArticleForm.astro";
+import { readSession } from "../../../../lib/session";
+import { readArticle } from "../../../../lib/articles";
+
+export const prerender = false;
+
+const cookie = Astro.request.headers.get("cookie") ?? undefined;
+const session = await readSession(cookie);
+if (!session) return Astro.redirect("/admin/login", 302);
+
+const slug = Astro.params.slug!;
+const existing = readArticle(slug);
+if (!existing) return Astro.redirect("/admin", 302);
+---
+<ArticleForm isEdit={true} slug={slug} a={existing} />
