@@ -21,39 +21,8 @@ export function randomString(len = 32): string {
   return base64url(bytes.buffer);
 }
 
-export interface OidcConfig {
-  issuer: string;
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-  allowedSubs: string[];
-  siteUrl: string;
-}
-
-export function getOidcConfig(): OidcConfig {
-  const env = import.meta.env;
-  const issuer = env.OIDC_ISSUER?.replace(/\/$/, "");
-  const allowed = (env.OIDC_ALLOWED_SUBS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  if (
-    !issuer ||
-    !env.OIDC_CLIENT_ID ||
-    !env.OIDC_CLIENT_SECRET ||
-    !allowed.length
-  ) {
-    throw new Error("OIDC environment is not fully configured");
-  }
-  return {
-    issuer,
-    clientId: env.OIDC_CLIENT_ID,
-    clientSecret: env.OIDC_CLIENT_SECRET,
-    redirectUri: `${env.SITE_URL?.replace(/\/$/, "")}/admin/callback`,
-    allowedSubs: allowed,
-    siteUrl: env.SITE_URL ?? "https://dimasbaguspm.dev",
-  };
-}
+import type { OidcConfig } from "./server-config";
+export { getOidcConfig } from "./server-config";
 
 export interface DiscoveredMetadata {
   authorization_endpoint: string;

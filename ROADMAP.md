@@ -11,9 +11,9 @@ enforces squash-only + Verify-green.
 - **Phase 1** (`feat/phase1-public-polish`): Public-site polish — typography,
   tags/archive pages, RSS feed, image optimization, 404, pagination.
 - **Phase 2** (`feat/phase2-oidc-auth`): Authentik OIDC login (Authorization
-  Code + PKCE) + session cookie + `/admin` route guard + logout. No UI yet.
+  Code + PKCE) + session cookie + `/admin` route guard + logout. ✅ done.
 - **Phase 3** (`feat/phase3-admin-articles`): Admin article editor (list/create/
-  edit/delete MDX), draft toggle, publish (writes Markdown to content dir).
+  edit/delete MDX), draft toggle, publish (writes Markdown to content dir). ✅ done.
 - **Phase 4** (`feat/phase4-admin-assets`): Asset upload (images/files) to
   mounted volume, list/delete, insert into editor.
 - **Phase 5** (`feat/phase5-admin-projects`): Highlighted projects CRUD (JSON).

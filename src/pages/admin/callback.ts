@@ -40,7 +40,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
       return new Response("Not an authorized user", { status: 403 });
     }
 
-    const session = await createSession(cfg.clientSecret, {
+    const session = await createSession({
       sub: info.sub,
       email: info.email,
       name: info.name ?? info.preferred_username,

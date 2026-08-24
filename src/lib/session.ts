@@ -1,5 +1,4 @@
-// Signed session cookie for the /admin area. HMAC-SHA256 over the payload,
-// base64url encoded. Verified on each request; tampered cookies are rejected.
+import { sessionSecret } from "./server-config";
 
 const enc = new TextEncoder();
 
@@ -36,10 +35,8 @@ export interface SessionData {
 const COOKIE = "dbpm_session";
 const MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
-export async function createSession(
-  secret: string,
-  data: SessionData,
-): Promise<string> {
+export async function createSession(data: SessionData): Promise<string> {
+  const secret = sessionSecret();
   const payload = b64url(
     JSON.stringify({ ...data, exp: Date.now() + MAX_AGE * 1000 }),
   );
@@ -48,10 +45,17 @@ export async function createSession(
 }
 
 export async function readSession(
-  secret: string,
-  cookie?: string,
+  cookieHeader?: string,
 ): Promise<SessionData | null> {
-  if (!cookie) return null;
+  const secret = sessionSecret();
+  if (!cookieHeader) return null;
+  // cookieHeader is the raw `Cookie:` value: "dbpm_session=p.s; other=x". Extract ours.
+  const raw = cookieHeader
+    .split(";")
+    .map((c) => c.trim())
+    .find((c) => c.startsWith(`${COOKIE}=`));
+  if (!raw) return null;
+  const cookie = raw.slice(COOKIE.length + 1);
   const [payload, sig] = cookie.split(".");
   if (!payload || !sig) return null;
   const expected = await hmac(secret, payload);

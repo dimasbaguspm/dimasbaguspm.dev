@@ -14,4 +14,8 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   server: { host: "0.0.0.0", port: 4321 },
   prefetch: false,
+  // The admin API (create/edit/delete articles) is an authenticated JSON API
+  // behind the OIDC session; writes use fetch with same-origin cookies. Disable
+  // Astro's built-in cross-origin check so DELETE/PUT work from the admin UI.
+  security: { checkOrigin: false },
 });
