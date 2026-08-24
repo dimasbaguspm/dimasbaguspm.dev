@@ -26,6 +26,8 @@ const articles = (await getCollection("articles")).sort(
     <a class="btn primary" href="/admin/articles/new">+ New article</a>
     <a class="btn" href="/admin/assets">Assets</a>
     <a class="btn" href="/admin/projects">Projects</a>
+    <button id="publish" class="btn warn">Publish → main</button>
+    <span id="pub-status" class="muted"></span>
 
     <h2>Articles</h2>
     {articles.length === 0 ? (
@@ -46,15 +48,34 @@ const articles = (await getCollection("articles")).sort(
   </section>
 </Base>
 
+<script>
+  const btn = document.getElementById("publish") as HTMLButtonElement | null;
+  const status = document.getElementById("pub-status") as HTMLElement | null;
+  btn?.addEventListener("click", async () => {
+    if (!btn || !status) return;
+    btn.disabled = true;
+    status.textContent = "Publishing…";
+    const res = await fetch("/api/publish", { method: "POST" });
+    const data = await res.json().catch(() => ({}));
+    status.textContent = res.ok
+      ? (data.published ? "Published ✓" : data.message || "Nothing to publish")
+      : `Failed: ${data.message || res.status}`;
+    btn.disabled = false;
+  });
+</script>
+
 <style>
   .admin { max-width: 720px; margin: 0 auto; }
   .top { display: flex; justify-content: space-between; align-items: center; }
   .who { display: flex; gap: 0.8rem; align-items: center; color: var(--muted); font-size: 14px; }
-  .btn { display: inline-block; padding: 0.45rem 0.9rem; border: 1px solid #d0d5dd; border-radius: 8px; text-decoration: none; }
+  .btn { display: inline-block; padding: 0.45rem 0.9rem; border: 1px solid #d0d5dd; border-radius: 8px; text-decoration: none; cursor: pointer; background: #fff; color: inherit; }
+  .btn.warn { border-color: #b45309; color: #b45309; }
+  .btn:disabled { opacity: 0.5; cursor: default; }
   .primary { background: var(--accent); color: #fff; border-color: var(--accent); margin: 1rem 0; }
   .list { list-style: none; padding: 0; }
   .list li { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid #eee; }
   .title { font-weight: 600; text-decoration: none; }
   .meta { color: var(--muted); font-size: 14px; }
+  .muted { color: var(--muted); font-size: 14px; }
   .draft { color: #b45309; }
 </style>

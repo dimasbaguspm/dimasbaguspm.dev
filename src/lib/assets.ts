@@ -1,23 +1,18 @@
-// Read/write uploaded assets under public/assets/uploads.
-// In prod, ASSET_DIR points at a mounted volume; ASSET_PUBLIC_PREFIX is the URL
-// prefix the files are served from. Falls back to ./public/assets/uploads so
-// local/dev works without extra config.
+// Asset store backed by GitHub (Phase 7). Uploaded files are committed to
+// public/assets/uploads on the GITHUB_CONTENT_BRANCH (un-ignore that dir so it is
+// tracked). Served statically at /assets/uploads. List/delete via the API.
 
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import {
+  getGithubConfig,
+  getFile,
+  putFile,
+  deleteFile,
+  listDir,
+} from "./github";
+import type { GithubConfig } from "./github";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DIR = "public/assets/uploads";
 
-export const ASSET_DIR = process.env.ASSET_DIR
-  ? path.resolve(process.env.ASSET_DIR)
-  : path.resolve(__dirname, "../../../public/assets/uploads");
-
-// URL prefix the browser uses to fetch the asset (served by the static dir).
-export const ASSET_PUBLIC_PREFIX =
-  process.env.ASSET_PUBLIC_PREFIX || "/assets/uploads";
-
-// Allowed extensions + a hard size cap (default 10 MB).
 const ALLOWED_EXT = new Set([
   "png",
   "jpg",
@@ -39,55 +34,76 @@ const MAX_BYTES = Number(process.env.ASSET_MAX_BYTES || 10 * 1024 * 1024);
 function safeName(name: string): string {
   const base = path.basename(name).replace(/[^a-zA-Z0-9._-]/g, "_");
   const ext = base.includes(".") ? base.split(".").pop()!.toLowerCase() : "";
-  if (ext && !ALLOWED_EXT.has(ext)) {
+  if (ext && !ALLOWED_EXT.has(ext))
     throw new Error(`File type .${ext} is not allowed`);
-  }
   return base;
 }
 
-export function listAssets(): { name: string; url: string; size: number }[] {
-  if (!fs.existsSync(ASSET_DIR)) return [];
-  return fs
-    .readdirSync(ASSET_DIR)
-    .filter((f) => fs.statSync(path.join(ASSET_DIR, f)).isFile())
-    .map((name) => {
-      const stat = fs.statSync(path.join(ASSET_DIR, name));
-      return { name, url: `${ASSET_PUBLIC_PREFIX}/${name}`, size: stat.size };
-    })
+import path from "node:path";
+
+export async function listAssets(
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<{ name: string; url: string }[]> {
+  const entries = await listDir(cfg, DIR);
+  return entries
+    .filter((e) => e.type === "file")
+    .map((e) => ({ name: e.name, url: `/assets/uploads/${e.name}` }))
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function saveAsset(
+export async function saveAsset(
   originalName: string,
   data: Buffer,
-): { name: string; url: string } {
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<{ name: string; url: string }> {
   if (data.byteLength > MAX_BYTES) {
     throw new Error(
       `File too large (max ${Math.round(MAX_BYTES / 1024 / 1024)} MB)`,
     );
   }
-  const name = safeName(originalName);
-  fs.mkdirSync(ASSET_DIR, { recursive: true });
-  // avoid clobbering: append a short suffix if the name exists
-  let finalName = name;
+  let name = safeName(originalName);
+  // avoid clobber: find a free name
+  const existing = await listAssets(cfg);
+  const taken = new Set(existing.map((x) => x.name));
   const dot = name.lastIndexOf(".");
   const stem = dot > 0 ? name.slice(0, dot) : name;
   const ext = dot > 0 ? name.slice(dot) : "";
   let n = 1;
-  while (fs.existsSync(path.join(ASSET_DIR, finalName))) {
-    finalName = `${stem}-${n}${ext}`;
+  while (taken.has(name)) {
+    name = `${stem}-${n}${ext}`;
     n++;
   }
-  fs.writeFileSync(path.join(ASSET_DIR, finalName), data);
-  return { name: finalName, url: `${ASSET_PUBLIC_PREFIX}/${finalName}` };
+  const existingFile = await getFile(cfg, `${DIR}/${name}`);
+  // putFile base64-encodes a UTF-8 string; pass raw bytes as latin1 so they survive
+  // the round-trip (latin1 chars 0-255 map 1:1 through UTF-8).
+  await putFile(
+    cfg,
+    `${DIR}/${name}`,
+    data.toString("latin1"),
+    `Upload asset: ${name}`,
+    existingFile?.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return { name, url: `/assets/uploads/${name}` };
 }
 
-export function deleteAsset(name: string): boolean {
+export async function deleteAsset(
+  name: string,
+  committer: { name: string; email: string },
+  cfg: GithubConfig = getGithubConfig(),
+): Promise<boolean> {
   const clean = path.basename(name);
-  const file = path.join(ASSET_DIR, clean);
-  if (fs.existsSync(file)) {
-    fs.unlinkSync(file);
-    return true;
-  }
-  return false;
+  const existing = await getFile(cfg, `${DIR}/${clean}`);
+  if (!existing) return false;
+  await deleteFile(
+    cfg,
+    `${DIR}/${clean}`,
+    `Delete asset: ${clean}`,
+    existing.sha,
+    cfg.contentBranch,
+    committer,
+  );
+  return true;
 }

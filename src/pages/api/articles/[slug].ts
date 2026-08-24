@@ -1,6 +1,11 @@
 import type { APIRoute } from "astro";
 import { requireSession } from "../../../lib/requireSession";
 import {
+  getGithubConfig,
+  committerFromSession,
+  GithubError,
+} from "../../../lib/github";
+import {
   writeArticle,
   deleteArticle,
   type ArticleInput,
@@ -15,6 +20,7 @@ export const PUT: APIRoute = async (ctx) => {
   } catch (r) {
     return r as Response;
   }
+  const cfg = getGithubConfig();
   const slug = ctx.params.slug!;
   let data: Record<string, unknown>;
   try {
@@ -40,12 +46,11 @@ export const PUT: APIRoute = async (ctx) => {
     body: typeof data.body === "string" ? data.body : "",
   };
   try {
-    writeArticle(slug, input);
-    return Response.json({ slug });
+    const res = await writeArticle(slug, input, committerFromSession(ctx));
+    return Response.json(res);
   } catch (err) {
-    return new Response(`Write failed: ${(err as Error).message}`, {
-      status: 500,
-    });
+    const status = err instanceof GithubError ? err.status : 500;
+    return new Response(`Write failed: ${(err as Error).message}`, { status });
   }
 };
 
@@ -55,7 +60,13 @@ export const DELETE: APIRoute = async (ctx) => {
   } catch (r) {
     return r as Response;
   }
+  const cfg = getGithubConfig();
   const slug = ctx.params.slug!;
-  const ok = deleteArticle(slug);
-  return Response.json({ deleted: ok, slug });
+  try {
+    const ok = await deleteArticle(slug, committerFromSession(ctx));
+    return Response.json({ deleted: ok, slug });
+  } catch (err) {
+    const status = err instanceof GithubError ? err.status : 500;
+    return new Response(`Delete failed: ${(err as Error).message}`, { status });
+  }
 };
