@@ -1,8 +1,6 @@
 services:
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/dimasbaguspm/dimasbaguspm.dev:latest
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
@@ -17,10 +15,4 @@ services:
       GITHUB_REPO: ${GITHUB_REPO}
       GITHUB_CONTENT_BRANCH: ${GITHUB_CONTENT_BRANCH}
       GITHUB_BRANCH: ${GITHUB_BRANCH}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.dimasbaguspm-dev.rule=Host(`dimasbaguspm.dev`)
-      - traefik.http.routers.dimasbaguspm-dev.entrypoints=websecure
-      - traefik.http.routers.dimasbaguspm-dev.tls.certresolver=letsencrypt
-      - traefik.http.services.dimasbaguspm-dev.loadbalancer.server.port=4321
     restart: unless-stopped
