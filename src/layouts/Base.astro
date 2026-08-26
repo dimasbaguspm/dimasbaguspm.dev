@@ -36,7 +36,7 @@ const AUTHOR = "Dimas Bagus Prayogo Mukti";
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <meta name="author" content={AUTHOR} />
-    <script type="application/ld+json" set:html={JSON.stringify({
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": type === "article" ? "Article" : "WebSite",
       name: title,

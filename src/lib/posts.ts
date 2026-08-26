@@ -9,6 +9,7 @@ export interface Post {
   title: string;
   description?: string;
   pubDate?: string;
+  author?: string;
   tags: string[];
   body: string;
 }
@@ -38,7 +39,7 @@ function parseFrontmatter(raw: string): {
     const i = line.indexOf(":");
     if (i < 0) continue;
     const k = line.slice(0, i).trim();
-    let v = line
+    let v: string | string[] = line
       .slice(i + 1)
       .trim()
       .replace(/^["']|["']$/g, "");
