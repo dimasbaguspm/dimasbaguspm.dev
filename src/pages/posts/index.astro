@@ -1,19 +1,16 @@
 ---
 import Base from "../../layouts/Base.astro";
-const posts = Object.values(await import.meta.glob("./*.md", { eager: true })) as any[];
-const sorted = posts
-  .filter((p) => !p.frontmatter.draft)
-  .sort((a, b) => (b.frontmatter.pubDate ?? "").localeCompare(a.frontmatter.pubDate ?? ""));
+import { listPosts } from "../../lib/posts";
+export const prerender = false;
+const posts = await listPosts();
 ---
 <Base title="Articles — dimasbaguspm.dev">
   <h1>Articles</h1>
   <ul class="posts">
-    {sorted.map((p) => (
+    {posts.map((p) => (
       <li>
-        <a href={p.url}>{p.frontmatter.title}</a>
-        {p.frontmatter.pubDate && (
-          <time datetime={p.frontmatter.pubDate}>{p.frontmatter.pubDate}</time>
-        )}
+        <a href={`/posts/${p.slug}`}>{p.title}</a>
+        {p.pubDate && <time datetime={p.pubDate}>{p.pubDate}</time>}
       </li>
     ))}
   </ul>

@@ -1,6 +1,11 @@
 services:
   web:
     image: ghcr.io/dimasbaguspm/dimasbaguspm.dev:latest
-    ports:
-      - "80:80"
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 4321
+      GITHUB_REPO: dimasbaguspm/dimasbaguspm.dev
+      POSTS_PATH: content/posts
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
     restart: unless-stopped

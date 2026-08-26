@@ -1,10 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
-const posts = Object.values(await import.meta.glob("./posts/*.md", { eager: true })) as any[];
-const articles = posts
-  .filter((p) => !p.frontmatter.draft)
-  .sort((a, b) => (b.frontmatter.pubDate ?? "").localeCompare(a.frontmatter.pubDate ?? ""))
-  .slice(0, 5);
+import { listPosts } from "../lib/posts";
+export const prerender = false;
+const posts = await listPosts();
 ---
 <Base title="Dimas Bagus Putra Mahottama">
   <section class="hero">
@@ -15,12 +13,10 @@ const articles = posts
   <section>
     <h2>Latest articles</h2>
     <ul class="posts">
-      {articles.map((a) => (
+      {posts.slice(0, 5).map((a) => (
         <li>
-          <a href={a.url}>{a.frontmatter.title}</a>
-          {a.frontmatter.pubDate && (
-            <time datetime={a.frontmatter.pubDate}>{a.frontmatter.pubDate}</time>
-          )}
+          <a href={`/posts/${a.slug}`}>{a.title}</a>
+          {a.pubDate && <time datetime={a.pubDate}>{a.pubDate}</time>}
         </li>
       ))}
     </ul>
