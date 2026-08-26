@@ -6,19 +6,35 @@ const { slug } = Astro.params;
 const post = slug ? await readPost(slug) : null;
 if (!post) return Astro.redirect("/posts", 404);
 const html = renderMarkdown(post.body);
+const author = post.author ?? "Dimas Bagus Prayogo Mukti";
+const avatar = "https://github.com/dimasbaguspm.png";
 ---
-<Base title={post.title} description={post.description} type="article">
+<Base title={post.title} description={post.description} type="article" image={avatar}>
   <article>
-    <h1>{post.title}</h1>
-    {post.pubDate && <time datetime={post.pubDate}>{post.pubDate}</time>}
+    <header class="post-head">
+      <h1>{post.title}</h1>
+      <div class="byline">
+        <img src={avatar} alt={author} width="32" height="32" />
+        <span>{author}</span>
+        {post.pubDate && <time datetime={post.pubDate}>{post.pubDate}</time>}
+      </div>
+      {post.tags.length > 0 && (
+        <ul class="tags">
+          {post.tags.map((t) => <li>#{t}</li>)}
+        </ul>
+      )}
+    </header>
     <Fragment set:html={html} />
   </article>
 </Base>
 
 <style>
+  .post-head h1 { margin-bottom: 0.4rem; }
+  .byline { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); font-size: 14px; }
+  .byline img { border-radius: 50%; }
+  .tags { list-style: none; display: flex; gap: 0.5rem; padding: 0; margin: 0.5rem 0 1.5rem; color: var(--accent); font-size: 14px; }
   article { line-height: 1.7; }
-  article h1 { margin-bottom: 0.2rem; }
-  article time { color: var(--muted); font-size: 14px; }
   article :global(pre) { background: #f6f8fa; padding: 1rem; overflow: auto; border-radius: 6px; }
   article :global(img) { max-width: 100%; }
+  article :global(h2) { margin-top: 2rem; }
 </style>

@@ -4,15 +4,18 @@ interface Props {
   description?: string;
   canonical?: string;
   type?: "website" | "article";
+  image?: string;
 }
 const {
   title,
-  description = "Personal blog of Dimas Bagus Putra Mahottama — engineering, notes, and projects.",
+  description = "Personal blog of Dimas Bagus Prayogo Mukti — engineering, notes, and projects.",
   canonical,
   type = "website",
+  image = "https://github.com/dimasbaguspm.png",
 } = Astro.props;
 const site = Astro.site?.toString() ?? "https://dimasbaguspm.dev";
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
+const AUTHOR = "Dimas Bagus Prayogo Mukti";
 ---
 <!doctype html>
 <html lang="en">
@@ -22,11 +25,17 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="https://github.com/dimasbaguspm.png" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={image} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="author" content={AUTHOR} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": type === "article" ? "Article" : "WebSite",
@@ -34,6 +43,8 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
       headline: title,
       description,
       url: canonicalUrl,
+      image,
+      author: { "@type": "Person", name: AUTHOR },
     })} />
   </head>
   <body>
@@ -49,7 +60,7 @@ const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
       <slot />
     </main>
     <footer>
-      <p>© {new Date().getFullYear()} Dimas Bagus Putra Mahottama</p>
+      <p>© {new Date().getFullYear()} {AUTHOR}</p>
     </footer>
   </body>
 </html>
