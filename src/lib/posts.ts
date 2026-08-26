@@ -27,7 +27,10 @@ async function gh(path: string): Promise<Response> {
   return fetch(url, { headers });
 }
 
-function parseFrontmatter(raw: string): { fm: Record<string, any>; body: string } {
+function parseFrontmatter(raw: string): {
+  fm: Record<string, any>;
+  body: string;
+} {
   const m = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!m) return { fm: {}, body: raw };
   const fm: Record<string, any> = {};
@@ -35,7 +38,10 @@ function parseFrontmatter(raw: string): { fm: Record<string, any>; body: string 
     const i = line.indexOf(":");
     if (i < 0) continue;
     const k = line.slice(0, i).trim();
-    let v = line.slice(i + 1).trim().replace(/^["']|["']$/g, "");
+    let v = line
+      .slice(i + 1)
+      .trim()
+      .replace(/^["']|["']$/g, "");
     if (v.startsWith("[") && v.endsWith("]")) {
       v = v
         .slice(1, -1)
