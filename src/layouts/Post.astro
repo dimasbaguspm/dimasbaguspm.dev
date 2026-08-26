@@ -1,0 +1,24 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  pubDate?: string;
+}
+const { title, description, pubDate } = Astro.props;
+import Base from "./Base.astro";
+---
+<Base title={title} description={description} type="article">
+  <article>
+    <h1>{title}</h1>
+    {pubDate && <time datetime={pubDate}>{pubDate}</time>}
+    <slot />
+  </article>
+</Base>
+
+<style>
+  article { line-height: 1.7; }
+  article h1 { margin-bottom: 0.2rem; }
+  article time { color: var(--muted); font-size: 14px; }
+  article :global(pre) { background: #f6f8fa; padding: 1rem; overflow: auto; border-radius: 6px; }
+  article :global(img) { max-width: 100%; }
+</style>

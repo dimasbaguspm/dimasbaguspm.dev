@@ -1,0 +1,26 @@
+---
+import Base from "../../layouts/Base.astro";
+const posts = Object.values(await import.meta.glob("./*.md", { eager: true })) as any[];
+const sorted = posts
+  .filter((p) => !p.frontmatter.draft)
+  .sort((a, b) => (b.frontmatter.pubDate ?? "").localeCompare(a.frontmatter.pubDate ?? ""));
+---
+<Base title="Articles — dimasbaguspm.dev">
+  <h1>Articles</h1>
+  <ul class="posts">
+    {sorted.map((p) => (
+      <li>
+        <a href={p.url}>{p.frontmatter.title}</a>
+        {p.frontmatter.pubDate && (
+          <time datetime={p.frontmatter.pubDate}>{p.frontmatter.pubDate}</time>
+        )}
+      </li>
+    ))}
+  </ul>
+</Base>
+
+<style>
+  .posts { list-style: none; padding: 0; }
+  .posts li { margin: 0.6rem 0; display: flex; gap: 0.8rem; align-items: baseline; }
+  .posts time { color: var(--muted); font-size: 14px; }
+</style>

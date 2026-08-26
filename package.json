@@ -7,7 +7,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "start": "node ./dist/server/entry.mjs",
     "astro": "astro",
     "check": "astro check",
     "lint": "oxlint src",
@@ -15,8 +14,6 @@
   },
   "dependencies": {
     "@astrojs/mdx": "4.3.14",
-    "@astrojs/node": "9.5.5",
-    "@astrojs/rss": "4.0.19",
     "@astrojs/sitemap": "3.7.3",
     "astro": "5.18.2",
     "shiki": "3.23.0"

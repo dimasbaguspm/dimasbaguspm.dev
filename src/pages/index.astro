@@ -1,12 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
-import { getCollection } from "astro:content";
-const articles = (await getCollection("articles", ({ data }) => !data.draft))
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
-const projects = (await getCollection("projects"))
-  .sort((a, b) => a.data.order - b.data.order)
-  .filter((p) => p.data.featured)
-  .slice(0, 3);
+const posts = Object.values(await import.meta.glob("./posts/*.md", { eager: true })) as any[];
+const articles = posts
+  .filter((p) => !p.frontmatter.draft)
+  .sort((a, b) => (b.frontmatter.pubDate ?? "").localeCompare(a.frontmatter.pubDate ?? ""))
+  .slice(0, 5);
 ---
 <Base title="Dimas Bagus Putra Mahottama">
   <section class="hero">
@@ -14,37 +12,26 @@ const projects = (await getCollection("projects"))
     <p>I write about engineering, systems, and the things I build. Minimal, fast, and friendly to search engines.</p>
   </section>
 
-  {projects.length > 0 && (
-    <section>
-      <h2>Highlighted projects</h2>
-      <ul class="cards">
-        {projects.map((p) => (
-          <li>
-            <a href={p.data.url}>{p.data.name}</a> — {p.data.blurb}
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
-
   <section>
     <h2>Latest articles</h2>
     <ul class="posts">
       {articles.map((a) => (
         <li>
-          <a href={`/articles/${a.slug}`}>{a.data.title}</a>
-          <time datetime={a.data.pubDate.toISOString()}>
-            {a.data.pubDate.toISOString().slice(0, 10)}
-          </time>
+          <a href={a.url}>{a.frontmatter.title}</a>
+          {a.frontmatter.pubDate && (
+            <time datetime={a.frontmatter.pubDate}>{a.frontmatter.pubDate}</time>
+          )}
         </li>
       ))}
     </ul>
+    <a class="more" href="/posts">All articles →</a>
   </section>
 </Base>
 
 <style>
   .hero h1 { font-size: 2.2rem; margin-bottom: 0.2rem; }
-  .cards, .posts { list-style: none; padding: 0; }
+  .posts { list-style: none; padding: 0; }
   .posts li { margin: 0.6rem 0; display: flex; gap: 0.8rem; align-items: baseline; }
   .posts time { color: var(--muted); font-size: 14px; }
+  .more { display: inline-block; margin-top: 0.5rem; }
 </style>
