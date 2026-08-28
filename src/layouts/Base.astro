@@ -57,10 +57,12 @@ const umamiId = process.env.UMAMI_ID;
     })} />
   </head>
   <body class="bg-white text-neutral-900 antialiased">
-    <header class="mx-auto flex max-w-3xl items-center justify-between px-4 py-6">
+    <header class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-6">
       <a href="/" class="font-semibold">{new URL(site).host}</a>
-      <nav class="text-sm text-neutral-500">
+      <nav class="flex flex-wrap items-center gap-4 text-sm text-neutral-500">
         <a href="/posts" class="transition-colors hover:text-neutral-900">Articles</a>
+        <a href="/#projects" class="transition-colors hover:text-neutral-900">Projects</a>
+        <a href="/cv" class="transition-colors hover:text-neutral-900">CV</a>
       </nav>
     </header>
     <main class="mx-auto max-w-3xl px-4">

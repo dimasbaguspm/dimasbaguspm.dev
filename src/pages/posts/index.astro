@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { getProfile, listPosts } from "../../lib/posts";
+import { formatDate, getProfile, listPosts } from "../../lib/posts";
 export const prerender = false;
 const [profile, posts] = await Promise.all([getProfile(), listPosts()]);
 ---
@@ -8,10 +8,12 @@ const [profile, posts] = await Promise.all([getProfile(), listPosts()]);
   <h1 class="py-8 text-3xl font-bold tracking-tight">Articles</h1>
   <ul>
     {posts.map((p) => (
-      <li class="flex items-baseline gap-3 py-2">
+      <li class="flex flex-col py-2 sm:flex-row sm:items-baseline sm:gap-3">
         <a href={`/posts/${p.slug}`} class="hover:underline">{p.title}</a>
         {p.pubDate && (
-          <time datetime={p.pubDate} class="text-sm text-neutral-500">{p.pubDate}</time>
+          <time datetime={p.pubDate} class="text-sm text-neutral-500">
+            {formatDate(p.pubDate)}
+          </time>
         )}
       </li>
     ))}

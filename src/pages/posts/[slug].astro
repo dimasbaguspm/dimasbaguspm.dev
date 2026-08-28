@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { getProfile, readPost, renderMarkdown } from "../../lib/posts";
+import { formatDate, getProfile, readPost, renderMarkdown } from "../../lib/posts";
 export const prerender = false;
 const { slug } = Astro.params;
 const post = slug ? await readPost(slug) : null;
@@ -11,14 +11,14 @@ const profile = await getProfile();
 <Base title={post.title} description={post.description} type="article">
   <article class="py-8">
     <header>
-      <h1 class="text-3xl font-bold tracking-tight">{post.title}</h1>
-      <div class="mt-4 flex items-center gap-3 text-sm text-neutral-500">
-        <img src={profile.avatar} alt={profile.name} width="28" height="28" class="rounded-full" />
+      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{post.title}</h1>
+      <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-neutral-500">
+        <img src={profile.avatar} alt={profile.name} width="28" height="28" class="h-7 w-7 rounded-full" />
         <span>{profile.name}</span>
-        {post.pubDate && <time datetime={post.pubDate}>{post.pubDate}</time>}
+        {post.pubDate && <time datetime={post.pubDate}>{formatDate(post.pubDate)}</time>}
       </div>
       {post.tags.length > 0 && (
-        <ul class="mt-2 flex gap-3 text-sm text-accent">
+        <ul class="mt-2 flex flex-wrap gap-3 text-sm text-accent">
           {post.tags.map((t) => <li>#{t}</li>)}
         </ul>
       )}
@@ -26,16 +26,3 @@ const profile = await getProfile();
     <div class="prose-simple mt-8" set:html={html} />
   </article>
 </Base>
-
-<style>
-  .prose-simple { line-height: 1.7; }
-  .prose-simple :global(h2) { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; }
-  .prose-simple :global(p) { margin: 1rem 0; color: #262626; }
-  .prose-simple :global(a) { color: var(--color-accent); text-decoration: underline; }
-  .prose-simple :global(pre) { background: #f6f8fa; padding: 1rem; overflow: auto; border-radius: 8px; margin: 1rem 0; }
-  .prose-simple :global(code) { font-size: 0.9em; }
-  .prose-simple :global(img) { max-width: 100%; border-radius: 8px; }
-  .prose-simple :global(ul, ol) { padding-left: 1.5rem; margin: 1rem 0; list-style: disc; }
-  .prose-simple :global(ol) { list-style: decimal; }
-  .prose-simple :global(blockquote) { border-left: 3px solid var(--color-accent); padding-left: 1rem; color: #525252; }
-</style>

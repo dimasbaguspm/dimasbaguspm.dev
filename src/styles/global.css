@@ -3,3 +3,56 @@
 @theme {
   --color-accent: #2f6f4f;
 }
+
+/* Article / document prose. Code blocks are shiki (dark theme, inline-styled),
+   so pre only carries spacing/rounding here. */
+.prose-simple {
+  line-height: 1.7;
+}
+.prose-simple h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+.prose-simple h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+.prose-simple p {
+  margin: 1rem 0;
+  color: #262626;
+}
+.prose-simple a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+.prose-simple pre {
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.prose-simple code {
+  font-size: 0.9em;
+}
+.prose-simple img {
+  max-width: 100%;
+  border-radius: 8px;
+}
+.prose-simple ul,
+.prose-simple ol {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+.prose-simple ul {
+  list-style: disc;
+}
+.prose-simple ol {
+  list-style: decimal;
+}
+.prose-simple blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1rem;
+  color: #525252;
+}

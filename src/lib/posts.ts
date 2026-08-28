@@ -1,6 +1,7 @@
 import { Octokit } from "@octokit/rest";
 import { marked } from "marked";
 import { createHighlighter } from "shiki";
+import dayjs from "dayjs";
 import { SpanStatusCode } from "@opentelemetry/api";
 import { log, tracer } from "./otel"; // starts the SDK when OTEL_HOST is set
 import { cached } from "./cache";
@@ -35,7 +36,7 @@ async function gh<T>(name: string, fn: () => Promise<T>): Promise<T> {
 }
 
 const highlighter = await createHighlighter({
-  themes: ["github-light"],
+  themes: ["github-dark"],
   langs: ["ts", "js", "bash", "json", "markdown", "css", "html"],
 });
 
@@ -44,11 +45,14 @@ marked.use({
     code({ text, lang }) {
       return highlighter.codeToHtml(text, {
         lang: lang || "text",
-        theme: "github-light",
+        theme: "github-dark",
       });
     },
   },
 });
+
+export const formatDate = (d?: string) =>
+  d ? dayjs(d).format("MMM D, YYYY") : "";
 
 export interface Post {
   slug: string;
@@ -92,6 +96,41 @@ export async function getProfile(): Promise<Profile> {
       };
     }
   });
+}
+
+export interface Repo {
+  name: string;
+  description: string | null;
+  language: string | null;
+  stars: number;
+  url: string;
+}
+
+/** Top public repos (non-forks by stars) — the projects section. */
+export async function listProjects(limit = 6): Promise<Repo[]> {
+  return cached(`repos:${limit}`, async () => {
+    const { data } = await gh("github.listRepos", () =>
+      octokit.rest.repos.listForUser({ username: OWNER, per_page: 100 }),
+    );
+    return data
+      .filter((r) => !r.fork)
+      .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
+      .slice(0, limit)
+      .map((r) => ({
+        name: r.name,
+        description: r.description,
+        language: r.language,
+        stars: r.stargazers_count ?? 0,
+        url: r.html_url,
+      }));
+  });
+}
+
+/** Raw Markdown document (frontmatter + body), e.g. the CV. */
+export async function readDocument(path: string) {
+  const raw = await readFile(path);
+  if (!raw) return null;
+  return parseFrontmatter(raw);
 }
 
 async function listFiles(path: string) {
