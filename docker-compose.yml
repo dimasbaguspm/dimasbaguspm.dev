@@ -7,6 +7,7 @@ services:
       PORT: 4321
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       REDIS_HOST: ${REDIS_HOST:-}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
       OTEL_HOST: ${OTEL_HOST:-}
       UMAMI_SRC: ${UMAMI_SRC:-}
       UMAMI_ID: ${UMAMI_ID:-}

@@ -5,13 +5,28 @@ const TTL_MS = 60_000;
 const TTL_S = Math.max(1, Math.ceil(TTL_MS / 1000));
 const PREFIX = "dbpm:";
 const host = process.env.REDIS_HOST ?? "";
+const password = process.env.REDIS_PASSWORD ?? "";
 
 // Be liberal with the value: "host:port", "redis://..." or "http://..." all
-// work (http is a common typo for a RESP endpoint).
-function redisUrl(host: string): string {
-  if (/^rediss?:\/\//.test(host)) return host;
-  if (/^https?:\/\//.test(host)) return host.replace(/^http/, "redis");
-  return `redis://${host}`;
+// work (http is a common typo for a RESP endpoint). A password can ride in the
+// URL — or come from REDIS_PASSWORD when the value is scheme-less.
+function redisUrl(host: string, password: string): string {
+  let url = host;
+  if (/^rediss?:\/\//.test(host)) return url; // creds already in the URL
+  if (/^https?:\/\//.test(host)) url = host.replace(/^http/, "redis");
+  else url = `redis://${host}`;
+  if (password) {
+    url = url.replace(
+      /^redis:\/\//,
+      `redis://:${encodeURIComponent(password)}@`,
+    );
+  }
+  return url;
+}
+
+// Never leak credentials into logs.
+function sanitizeHost(h: string): string {
+  return h.replace(/^((?:redis|http)s?:\/\/)[^@]*@/, "$1***@");
 }
 
 let redis: Redis | null = null;
@@ -22,8 +37,8 @@ let ready = false;
 // ponytail: per-process state — fine single-instance, per-instance TTL drift
 // if you ever run multiple replicas behind a load balancer.
 if (host) {
-  log.info("cache: connecting to redis", { host });
-  redis = new Redis(redisUrl(host), {
+  log.info("cache: connecting to redis", { host: sanitizeHost(host) });
+  redis = new Redis(redisUrl(host, password), {
     maxRetriesPerRequest: 1,
     enableOfflineQueue: false,
   });
@@ -32,7 +47,7 @@ if (host) {
     ready = true;
     if (state !== "up") {
       state = "up";
-      log.info("cache: redis connected", { host });
+      log.info("cache: redis connected", { host: sanitizeHost(host) });
     }
   });
   redis.on("error", (e) => {
