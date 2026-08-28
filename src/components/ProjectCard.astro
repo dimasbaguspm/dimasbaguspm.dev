@@ -10,9 +10,7 @@ const rest = repo.topics.length - topics.length;
 ---
 <li>
   <a
-    href={repo.url}
-    target="_blank"
-    rel="noreferrer"
+    href={`/projects/${repo.name.toLowerCase()}`}
     class="flex h-full flex-col rounded-lg border border-neutral-200 p-4 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
   >
     <div class="flex items-start justify-between gap-2">

@@ -1,0 +1,60 @@
+---
+import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import {
+  getProfile,
+  getProject,
+  getReadme,
+  renderMarkdown,
+} from "../../lib/posts";
+export const prerender = false;
+const { slug } = Astro.params;
+const [profile, repo] = await Promise.all([
+  getProfile(),
+  getProject(slug ?? ""),
+]);
+if (!repo) return Astro.redirect("/projects", 404);
+const readme = await getReadme(repo.name);
+const ogImage = new URL(
+  `/og/${repo.name.toLowerCase()}.png`,
+  Astro.site ?? "https://dimasbaguspm.dev",
+).toString();
+---
+<Base
+  title={`${repo.name} — ${profile.name}`}
+  description={repo.description ?? undefined}
+  image={ogImage}
+>
+  <article class="py-8">
+    <Breadcrumb
+      items={[{ label: "Projects", href: "/projects" }, { label: repo.name }]}
+    />
+    <header class="mt-4">
+      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{repo.name}</h1>
+      <p class="mt-2 text-neutral-600">{repo.description}</p>
+      <p class="mt-3 flex flex-wrap items-center gap-3 text-xs text-neutral-500">
+        {repo.language && <span>{repo.language}</span>}
+        {repo.stars > 0 && <span>{repo.stars} stars</span>}
+        {repo.forks > 0 && <span>{repo.forks} forks</span>}
+        <a href={repo.url} target="_blank" rel="noreferrer" class="font-medium text-accent hover:underline">
+          GitHub
+        </a>
+        {repo.homepage && (
+          <a href={repo.homepage} target="_blank" rel="noreferrer" class="font-medium text-accent hover:underline">
+            Homepage
+          </a>
+        )}
+      </p>
+    </header>
+    {readme ? (
+      <div class="prose-simple mt-8" set:html={renderMarkdown(readme)} />
+    ) : (
+      <p class="mt-8 text-neutral-500">
+        No README — see the{" "}
+        <a href={repo.url} target="_blank" rel="noreferrer" class="text-accent underline">
+          repository
+        </a>.
+      </p>
+    )}
+  </article>
+</Base>

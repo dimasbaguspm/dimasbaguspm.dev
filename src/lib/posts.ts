@@ -145,11 +145,27 @@ export async function listProjectsByTag(
   return (await listRepos()).filter((r) => r.topics.includes(tag));
 }
 
-/** Raw Markdown document (frontmatter + body), e.g. the CV. */
-export async function readDocument(path: string) {
-  const raw = await readFile(path);
-  if (!raw) return null;
-  return parseFrontmatter(raw);
+export async function getProject(slug: string): Promise<Repo | null> {
+  const repos = await listRepos();
+  return repos.find((r) => r.name.toLowerCase() === slug.toLowerCase()) ?? null;
+}
+
+/** Raw README markdown for a repo (cached). */
+export async function getReadme(repoName: string): Promise<string | null> {
+  return cached(`readme:${repoName}`, () =>
+    gh("github.getReadme", async () => {
+      try {
+        const { data } = await octokit.rest.repos.getReadme({
+          owner: OWNER,
+          repo: repoName,
+          mediaType: { format: "raw" },
+        });
+        return typeof data === "string" ? data : null;
+      } catch {
+        return null; // no README → render description only
+      }
+    }),
+  );
 }
 
 async function listFiles(path: string) {

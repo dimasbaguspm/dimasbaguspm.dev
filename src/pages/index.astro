@@ -8,8 +8,12 @@ const [profile, posts, projects] = await Promise.all([
   listPosts(),
   listProjectsByTag("personal-project"),
 ]);
+const ogImage = new URL(
+  "/og/home.png",
+  Astro.site ?? "https://dimasbaguspm.dev",
+).toString();
 ---
-<Base title={profile.name} description={profile.bio ?? undefined}>
+<Base title={profile.name} description={profile.bio ?? undefined} image={ogImage}>
   <section class="py-10 sm:py-12">
     <div class="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
       <img

@@ -26,7 +26,10 @@ function loadAvatar(url: string): Promise<string | null> {
 }
 
 /** GitHub-style 1200×630 social preview: name + avatar up top, title big. */
-export async function renderOg(title: string): Promise<Buffer> {
+export async function renderOg(
+  title: string,
+  subtitle?: string | null,
+): Promise<Buffer> {
   const profile = await getProfile();
   const [fontData, avatar] = await Promise.all([
     loadFont(),
@@ -84,20 +87,43 @@ export async function renderOg(title: string): Promise<Buffer> {
           }),
         ],
       }),
-      h(
-        "div",
-        {
-          style: {
-            display: "flex",
-            color: "#f0f6fc",
-            fontSize: title.length > 70 ? 44 : 56,
-            fontWeight: 700,
-            lineHeight: 1.25,
-            maxWidth: 1000,
-          },
+      h("div", {
+        style: {
+          display: "flex",
+          flexDirection: "column",
         },
-        title,
-      ),
+        children: [
+          h(
+            "div",
+            {
+              style: {
+                display: "flex",
+                color: "#f0f6fc",
+                fontSize: title.length > 70 ? 44 : 56,
+                fontWeight: 700,
+                lineHeight: 1.25,
+                maxWidth: 1000,
+              },
+            },
+            title,
+          ),
+          subtitle &&
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  color: "#8b949e",
+                  fontSize: 28,
+                  lineHeight: 1.3,
+                  marginTop: 12,
+                  maxWidth: 900,
+                },
+              },
+              subtitle,
+            ),
+        ],
+      }),
     ],
   });
 
