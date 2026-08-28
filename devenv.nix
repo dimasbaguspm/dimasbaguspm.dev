@@ -1,18 +1,16 @@
 { pkgs, ... }:
 {
-  # Keep parity with runtime: Node 22 (Docker/CI) + pnpm.
+  # Parity with runtime: Node + pnpm (devenv's default nodejs).
   languages.javascript = {
     enable = true;
     pnpm.enable = true;
-    node = pkgs.nodejs_22;
   };
 
   # Local response cache — the site reads REDIS_HOST for cached GitHub fetches.
   services.redis.enable = true;
 
-  # Dev defaults; secrets (GITHUB_TOKEN, UMAMI_*, OTEL_HOST) come from .env,
-  # which devenv loads automatically via dotenv.
-  dotenv.enable = true;
+  # Dev defaults (non-secret). Secrets like GITHUB_TOKEN: export in your shell —
+  # this devenv CLI has no dotenv integration.
   env = {
     REDIS_HOST = "localhost:6379";
     OTEL_HOST = "";

@@ -26,7 +26,7 @@ const {
       data-tab-btn
       data-index="1"
       aria-selected={false}
-      class="px-4 py-2 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+      class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
     >
       {labelB}
     </button>
@@ -48,6 +48,7 @@ const {
         const active = i === index;
         b.setAttribute("aria-selected", String(active));
         b.classList.toggle("border-accent", active);
+        b.classList.toggle("border-transparent", !active);
         b.classList.toggle("text-neutral-900", active);
         b.classList.toggle("text-neutral-500", !active);
       });

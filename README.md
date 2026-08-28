@@ -14,7 +14,7 @@ The dev environment is defined by [`devenv.nix`](devenv.nix) — it pins
 Node 22 + pnpm and starts a local Redis for the response cache.
 
 ```sh
-cp .env.example .env   # secrets (GITHUB_TOKEN, OTEL_HOST, UMAMI_*) — devenv loads it via dotenv
+cp .env.example .env   # reference — secrets like GITHUB_TOKEN get exported in your shell
 devenv shell           # enters the environment (generates devenv.lock on first run)
 pnpm dev
 ```
