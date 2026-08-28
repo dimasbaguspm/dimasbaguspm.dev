@@ -13,7 +13,7 @@
     "lint": "oxlint src",
     "format": "oxfmt src",
     "precommit": "pnpm run lint && pnpm run check",
-    "postinstall": "simple-git-hooks"
+    "postinstall": "simple-git-hooks || true"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm run precommit"
@@ -34,7 +34,7 @@
     "lucide-astro": "^0.556.0",
     "marked": "15.0.7",
     "satori": "^0.33.4",
-    "sharp": "^0.35.4",
+    "sharp": "^0.34.5",
     "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3"
   },
@@ -50,7 +50,8 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
-    ]
+    ],
+    "autoInstallPeers": false
   },
   "packageManager": "pnpm@10.34.5"
 }
