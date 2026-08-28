@@ -5,7 +5,6 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 4321
-      GITHUB_REPOSITORY: dimasbaguspm/dimasbaguspm.dev
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       REDIS_HOST: ${REDIS_HOST:-}
       OTEL_HOST: ${OTEL_HOST:-}
