@@ -1,12 +1,12 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProjectCard from "../components/ProjectCard.astro";
-import { formatDate, getProfile, listPosts, listProjects } from "../lib/posts";
+import { formatDate, getProfile, listPosts, listProjectsByTag } from "../lib/posts";
 export const prerender = false;
 const [profile, posts, projects] = await Promise.all([
   getProfile(),
   listPosts(),
-  listProjects(6),
+  listProjectsByTag("personal-project"),
 ]);
 ---
 <Base title={profile.name} description={profile.bio ?? undefined}>
@@ -47,10 +47,16 @@ const [profile, posts, projects] = await Promise.all([
 
   <section class="mt-12">
     <h2 class="text-xl font-semibold">Projects</h2>
-    <p class="mt-1 text-sm text-neutral-500">Open source, straight from GitHub</p>
-    <ul class="mt-4 grid gap-3 sm:grid-cols-2">
-      {projects.map((repo) => <ProjectCard repo={repo} />)}
-    </ul>
+    <p class="mt-1 text-sm text-neutral-500">Personal projects, straight from GitHub</p>
+    {projects.length > 0 ? (
+      <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+        {projects.slice(0, 6).map((repo) => <ProjectCard repo={repo} />)}
+      </ul>
+    ) : (
+      <p class="mt-4 text-sm text-neutral-500">
+        Nothing tagged yet — add the <code>personal-project</code> topic to a repo.
+      </p>
+    )}
     <a href="/projects" class="mt-4 inline-block font-medium text-accent hover:underline">
       All projects
     </a>

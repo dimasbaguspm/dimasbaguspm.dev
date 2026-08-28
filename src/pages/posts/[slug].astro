@@ -1,5 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Pill from "../../components/Pill.astro";
 import { formatDate, getProfile, readPost, renderMarkdown } from "../../lib/posts";
 export const prerender = false;
 const { slug } = Astro.params;
@@ -14,7 +16,8 @@ const ogImage = new URL(
 ---
 <Base title={post.title} description={post.description} type="article" image={ogImage}>
   <article class="py-8">
-    <header>
+    <Breadcrumb items={[{ label: "Articles", href: "/posts" }, { label: post.title }]} />
+    <header class="mt-4">
       <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{post.title}</h1>
       <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-neutral-500">
         <img src={profile.avatar} alt={profile.name} width="28" height="28" class="h-7 w-7 rounded-full" />
@@ -22,8 +25,10 @@ const ogImage = new URL(
         {post.pubDate && <time datetime={post.pubDate}>{formatDate(post.pubDate)}</time>}
       </div>
       {post.tags.length > 0 && (
-        <ul class="mt-2 flex flex-wrap gap-3 text-sm text-accent">
-          {post.tags.map((t) => <li>#{t}</li>)}
+        <ul class="mt-2 flex flex-wrap gap-1.5">
+          {post.tags.map((t) => (
+            <li><Pill label={`#${t}`} /></li>
+          ))}
         </ul>
       )}
     </header>

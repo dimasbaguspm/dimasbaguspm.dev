@@ -44,6 +44,9 @@ importers:
       ioredis:
         specifier: ^6.0.0
         version: 6.0.0
+      lucide-astro:
+        specifier: ^0.556.0
+        version: 0.556.0(astro@5.18.2(@types/node@22.20.1)(ioredis@6.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.62.5)(typescript@5.9.3)(yaml@2.9.0))
       marked:
         specifier: 15.0.7
         version: 15.0.7
@@ -2222,6 +2225,12 @@ packages:
   lru-cache@11.5.2:
     resolution: {integrity: sha512-4pfM1Ff0x50o0tQwb5ucw/RzNyD0/YJME6IVcStalZuMWxdt3sR3huStTtxz4PUmvZfRguvDejasvQ2kifR11g==}
     engines: {node: 20 || >=22}
+
+  lucide-astro@0.556.0:
+    resolution: {integrity: sha512-ugMjPb45AMfkLCaduNSbyy5NQEKvB1TxVVMmUS4S6L807PMESnX0Qp+DIKHjbyjJmPXOyLRbrzvR3YikTK7brg==}
+    deprecated: 'Deprecated: Use `@lucide/astro`'
+    peerDependencies:
+      astro: '>=2.7.1'
 
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
@@ -5046,6 +5055,10 @@ snapshots:
   longest-streak@3.1.0: {}
 
   lru-cache@11.5.2: {}
+
+  lucide-astro@0.556.0(astro@5.18.2(@types/node@22.20.1)(ioredis@6.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.62.5)(typescript@5.9.3)(yaml@2.9.0)):
+    dependencies:
+      astro: 5.18.2(@types/node@22.20.1)(ioredis@6.0.0)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.62.5)(typescript@5.9.3)(yaml@2.9.0)
 
   magic-string@0.30.21:
     dependencies:

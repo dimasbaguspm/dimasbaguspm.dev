@@ -36,6 +36,13 @@
 .prose-simple code {
   font-size: 0.9em;
 }
+/* inline `backticks` get pill styling — code blocks (shiki) are excluded */
+.prose-simple :not(pre) code {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 0.12em 0.35em;
+  font-size: 0.85em;
+}
 .prose-simple img {
   max-width: 100%;
   border-radius: 8px;

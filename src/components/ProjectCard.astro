@@ -1,6 +1,12 @@
 ---
 import type { Repo } from "../lib/posts";
+import Pill from "./Pill.astro";
+interface Props {
+  repo: Repo;
+}
 const { repo } = Astro.props;
+const topics = repo.topics.slice(0, 2);
+const rest = repo.topics.length - topics.length;
 ---
 <li>
   <a
@@ -20,13 +26,14 @@ const { repo } = Astro.props;
     <p class="mt-1 line-clamp-2 text-sm text-neutral-600">
       {repo.description ?? "No description"}
     </p>
-    {repo.topics.length > 0 && (
+    {topics.length > 0 && (
       <ul class="mt-2 flex flex-wrap gap-1.5">
-        {repo.topics.slice(0, 4).map((t: string) => (
-          <li class="rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">
-            {t}
-          </li>
+        {topics.map((t) => (
+          <li><Pill label={t} /></li>
         ))}
+        {rest > 0 && (
+          <li><Pill label={`+${rest}`} /></li>
+        )}
       </ul>
     )}
     <p class="mt-auto pt-2 text-xs text-neutral-500">

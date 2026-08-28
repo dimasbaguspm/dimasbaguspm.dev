@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
 import { getProfile, listProjectsByTag } from "../../lib/posts";
 export const prerender = false;
 const [profile, repos] = await Promise.all([
@@ -13,7 +14,8 @@ const [profile, repos] = await Promise.all([
   description="Personal projects, tagged personal-project on GitHub."
 >
   <h1 class="py-8 text-3xl font-bold tracking-tight">Projects</h1>
-  <p class="-mt-4 pb-4 text-sm text-neutral-500">
+  <Breadcrumb items={[{ label: "Projects" }]} />
+  <p class="pb-4 text-sm text-neutral-500">
     Repos tagged <code class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs">personal-project</code> on GitHub.
   </p>
   <ul class="grid gap-3 sm:grid-cols-2">
