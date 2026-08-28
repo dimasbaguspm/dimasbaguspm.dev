@@ -1,0 +1,62 @@
+---
+interface Props {
+  labelA?: string;
+  labelB?: string;
+}
+const {
+  labelA = "Preview",
+  labelB = "Engineering Spec",
+}: Props = Astro.props;
+---
+<div class="tabs" data-tabs>
+  <div role="tablist" aria-label="Sections" class="flex gap-1 border-b border-neutral-200">
+    <button
+      type="button"
+      role="tab"
+      data-tab-btn
+      data-index="0"
+      aria-selected={true}
+      class="border-b-2 border-accent px-4 py-2 text-sm font-medium text-neutral-900"
+    >
+      {labelA}
+    </button>
+    <button
+      type="button"
+      role="tab"
+      data-tab-btn
+      data-index="1"
+      aria-selected={false}
+      class="px-4 py-2 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900"
+    >
+      {labelB}
+    </button>
+  </div>
+  <div role="tabpanel" data-tab-panel data-index="0" class="pt-4">
+    <slot name="a" />
+  </div>
+  <div role="tabpanel" data-tab-panel data-index="1" class="hidden pt-4">
+    <slot name="b" />
+  </div>
+</div>
+
+<script>
+  for (const tabs of document.querySelectorAll("[data-tabs]")) {
+    const btns = Array.from(tabs.querySelectorAll("[data-tab-btn]"));
+    const panels = Array.from(tabs.querySelectorAll("[data-tab-panel]"));
+    const select = (index: number) => {
+      btns.forEach((b, i) => {
+        const active = i === index;
+        b.setAttribute("aria-selected", String(active));
+        b.classList.toggle("border-accent", active);
+        b.classList.toggle("text-neutral-900", active);
+        b.classList.toggle("text-neutral-500", !active);
+      });
+      panels.forEach((p, i) => p.classList.toggle("hidden", i !== index));
+    };
+    btns.forEach((b) =>
+      b.addEventListener("click", () =>
+        select(Number((b as HTMLElement).dataset.index)),
+      ),
+    );
+  }
+</script>

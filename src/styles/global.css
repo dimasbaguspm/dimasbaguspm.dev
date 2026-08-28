@@ -63,3 +63,22 @@
   padding-left: 1rem;
   color: #525252;
 }
+/* GFM tables — horizontal scroll on narrow screens */
+.prose-simple table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9em;
+}
+.prose-simple th,
+.prose-simple td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+.prose-simple th {
+  background: #f9fafb;
+  font-weight: 600;
+}

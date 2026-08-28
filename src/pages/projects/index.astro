@@ -2,7 +2,9 @@
 import Base from "../../layouts/Base.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
-import { getProfile, listProjectsByTag } from "../../lib/posts";
+import Pill from "../../components/Pill.astro";
+import { getProfile } from "../../lib/posts";
+import { listProjectsByTag } from "../../lib/projects";
 export const prerender = false;
 const [profile, repos] = await Promise.all([
   getProfile(),
@@ -18,21 +20,19 @@ const ogImage = new URL(
   description="Personal projects, tagged personal-project on GitHub."
   image={ogImage}
 >
-  <Breadcrumb items={[{ label: "Projects" }]} />
-  <h1 class="py-8 text-3xl font-bold tracking-tight">Projects</h1>
-  <p class="-mt-4 pb-4 text-sm text-neutral-500">
-    Repos tagged{" "}
-    <code class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs">personal-project</code>{" "}
-    on GitHub.
-  </p>
-  <ul class="grid gap-3 sm:grid-cols-2">
-    {repos.map((repo) => <ProjectCard repo={repo} />)}
-  </ul>
-  {repos.length === 0 && (
-    <p class="text-neutral-500">
-      No tagged projects yet — add the{" "}
-      <code class="rounded bg-neutral-100 px-1.5 py-0.5 text-xs">personal-project</code>{" "}
-      topic to a repo.
+  <div class="py-8">
+    <Breadcrumb items={[{ label: "Projects" }]} />
+    <h1 class="mt-4 pb-8 text-2xl font-bold tracking-tight sm:text-3xl">Projects</h1>
+    <p class="flex items-center gap-1.5 pb-4 text-sm text-neutral-500">
+      Repos tagged <Pill label="personal-project" /> on GitHub.
     </p>
-  )}
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {repos.map((repo) => <ProjectCard repo={repo} />)}
+    </ul>
+    {repos.length === 0 && (
+      <p class="text-neutral-500">
+        No tagged projects yet — add the <Pill label="personal-project" /> topic to a repo.
+      </p>
+    )}
+  </div>
 </Base>

@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { listPosts, listProjectsByTag } from "../lib/posts";
+import { listPosts } from "../lib/posts";
+import { listProjectsByTag } from "../lib/projects";
 
 export const prerender = false;
 

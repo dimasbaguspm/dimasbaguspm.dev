@@ -1,12 +1,15 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import Tabs from "../../components/Tabs.astro";
+import PreviewCarousel from "../../components/PreviewCarousel.astro";
+import NotFound from "../../components/NotFound.astro";
+import { getProfile, renderMarkdown } from "../../lib/posts";
 import {
-  getProfile,
   getProject,
-  getReadme,
-  renderMarkdown,
-} from "../../lib/posts";
+  getEngineeringSpec,
+  listPreviewAssets,
+} from "../../lib/projects";
 export const prerender = false;
 const { slug } = Astro.params;
 const [profile, repo] = await Promise.all([
@@ -14,7 +17,10 @@ const [profile, repo] = await Promise.all([
   getProject(slug ?? ""),
 ]);
 if (!repo) return Astro.redirect("/projects", 404);
-const readme = await getReadme(repo.name);
+const [preview, spec] = await Promise.all([
+  listPreviewAssets(repo.name),
+  getEngineeringSpec(repo.name),
+]);
 const ogImage = new URL(
   `/og/${repo.name.toLowerCase()}.png`,
   Astro.site ?? "https://dimasbaguspm.dev",
@@ -46,15 +52,24 @@ const ogImage = new URL(
         )}
       </p>
     </header>
-    {readme ? (
-      <div class="prose-simple mt-8" set:html={renderMarkdown(readme)} />
-    ) : (
-      <p class="mt-8 text-neutral-500">
-        No README — see the{" "}
-        <a href={repo.url} target="_blank" rel="noreferrer" class="text-accent underline">
-          repository
-        </a>.
-      </p>
-    )}
+
+    <div class="mt-6">
+      <Tabs labelA="Preview" labelB="Engineering Spec">
+        <div slot="a">
+          {preview.length > 0 ? (
+            <PreviewCarousel assets={preview} />
+          ) : (
+            <NotFound message="No preview assets — add docs/preview/*" />
+          )}
+        </div>
+        <div slot="b">
+          {spec ? (
+            <div class="prose-simple" set:html={renderMarkdown(spec)} />
+          ) : (
+            <NotFound message="No engineering spec — add docs/ENGINEERING_SPEC.md" />
+          )}
+        </div>
+      </Tabs>
+    </div>
   </article>
 </Base>

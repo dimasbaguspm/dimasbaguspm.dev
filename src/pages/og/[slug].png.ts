@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
-import { getProfile, getProject, readPost } from "../../lib/posts";
+import { getProfile, readPost } from "../../lib/posts";
+import { getProject } from "../../lib/projects";
 import { cachedBuffer } from "../../lib/cache";
 import { renderOg } from "../../lib/og";
 

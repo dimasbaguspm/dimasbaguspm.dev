@@ -1,0 +1,12 @@
+---
+interface Props {
+  site: string;
+}
+const { site } = Astro.props;
+---
+<header class="mx-auto flex w-full max-w-3xl flex-wrap items-center justify-between gap-3 px-4 py-6">
+  <a href="/" class="font-semibold">{new URL(site).host}</a>
+  <nav class="flex flex-wrap items-center gap-4 text-sm text-neutral-500">
+    <a href="/posts" class="transition-colors hover:text-neutral-900">Articles</a>
+  </nav>
+</header>
