@@ -17,6 +17,7 @@
     "@astrojs/mdx": "4.3.14",
     "@astrojs/node": "9.5.5",
     "@astrojs/sitemap": "3.7.3",
+    "@octokit/rest": "^22.0.1",
     "astro": "5.18.2",
     "marked": "15.0.7",
     "shiki": "3.23.0"

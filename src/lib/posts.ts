@@ -1,8 +1,13 @@
+import { Octokit } from "@octokit/rest";
 import { marked } from "marked";
 
-const REPO = process.env.GITHUB_REPO ?? "dimasbaguspm/dimasbaguspm.dev";
 const TOKEN = process.env.GITHUB_TOKEN ?? "";
+const [OWNER, REPO] = (
+  process.env.GITHUB_REPO ?? "dimasbaguspm/dimasbaguspm.dev"
+).split("/");
 const POSTS_PATH = process.env.POSTS_PATH ?? "content/posts";
+
+const octokit = new Octokit({ auth: TOKEN || undefined });
 
 export interface Post {
   slug: string;
@@ -18,14 +23,31 @@ export interface Post {
 const cache = new Map<string, { at: number; data: unknown }>();
 const TTL = 60_000;
 
-async function gh(path: string): Promise<Response> {
-  const url = `https://api.github.com/repos/${REPO}/contents/${path}`;
-  const headers: Record<string, string> = {
-    Accept: "application/vnd.github+json",
-    "User-Agent": "dimasbaguspm-site",
-  };
-  if (TOKEN) headers.Authorization = `Bearer ${TOKEN}`;
-  return fetch(url, { headers });
+async function listFiles(path: string) {
+  try {
+    const { data } = await octokit.rest.repos.getContent({
+      owner: OWNER,
+      repo: REPO,
+      path,
+    });
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+async function readFile(path: string): Promise<string | null> {
+  try {
+    const { data } = await octokit.rest.repos.getContent({
+      owner: OWNER,
+      repo: REPO,
+      path,
+    });
+    if (Array.isArray(data) || data.type !== "file") return null;
+    return Buffer.from(data.content, "base64").toString("utf8");
+  } catch {
+    return null; // 404 or rate-limited → treat as missing, site degrades to empty
+  }
 }
 
 function parseFrontmatter(raw: string): {
@@ -59,10 +81,9 @@ export async function listPosts(): Promise<Post[]> {
   const key = "list";
   const c = cache.get(key);
   if (c && Date.now() - c.at < TTL) return c.data as Post[];
-  const res = await gh(POSTS_PATH);
-  if (!res.ok) return [];
-  const files = (await res.json()) as { name: string; type: string }[];
-  const mds = files.filter((f) => f.type === "file" && f.name.endsWith(".md"));
+  const mds = (await listFiles(POSTS_PATH)).filter(
+    (f) => f.type === "file" && f.name.endsWith(".md"),
+  );
   const posts = (
     await Promise.all(mds.map((f) => readPost(f.name.replace(/\.md$/, ""))))
   ).filter((p): p is Post => p !== null);
@@ -72,10 +93,8 @@ export async function listPosts(): Promise<Post[]> {
 }
 
 export async function readPost(slug: string): Promise<Post | null> {
-  const res = await gh(`${POSTS_PATH}/${slug}.md`);
-  if (!res.ok) return null;
-  const data = (await res.json()) as { content: string };
-  const raw = Buffer.from(data.content, "base64").toString("utf8");
+  const raw = await readFile(`${POSTS_PATH}/${slug}.md`);
+  if (!raw) return null;
   const { fm, body } = parseFrontmatter(raw);
   const tags = Array.isArray(fm.tags)
     ? fm.tags
