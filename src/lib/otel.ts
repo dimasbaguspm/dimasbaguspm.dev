@@ -6,6 +6,7 @@ import {
   SimpleLogRecordProcessor,
 } from "@opentelemetry/sdk-logs";
 import { SeverityNumber, logs } from "@opentelemetry/api-logs";
+import type { AnyValueMap } from "@opentelemetry/api-logs";
 import { trace } from "@opentelemetry/api";
 
 // OTEL_HOST, e.g. "localhost:4318" — when unset, log/tracer are no-ops.
@@ -38,7 +39,7 @@ if (endpoint) {
 }
 
 const otelLogger = logs.getLogger("dimasbaguspm.dev");
-type Attrs = Record<string, unknown>;
+type Attrs = AnyValueMap;
 
 export const log = {
   info: (message: string, attributes?: Attrs) =>
