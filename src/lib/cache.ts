@@ -6,6 +6,14 @@ const TTL_S = Math.max(1, Math.ceil(TTL_MS / 1000));
 const PREFIX = "dbpm:";
 const host = process.env.REDIS_HOST ?? "";
 
+// Be liberal with the value: "host:port", "redis://..." or "http://..." all
+// work (http is a common typo for a RESP endpoint).
+function redisUrl(host: string): string {
+  if (/^rediss?:\/\//.test(host)) return host;
+  if (/^https?:\/\//.test(host)) return host.replace(/^http/, "redis");
+  return `redis://${host}`;
+}
+
 let redis: Redis | null = null;
 let ready = false;
 
@@ -15,7 +23,7 @@ let ready = false;
 // if you ever run multiple replicas behind a load balancer.
 if (host) {
   log.info("cache: connecting to redis", { host });
-  redis = new Redis(`redis://${host}`, {
+  redis = new Redis(redisUrl(host), {
     maxRetriesPerRequest: 1,
     enableOfflineQueue: false,
   });
