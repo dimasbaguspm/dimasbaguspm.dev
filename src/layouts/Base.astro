@@ -1,4 +1,7 @@
 ---
+import { getProfile } from "../lib/posts";
+import "../styles/global.css";
+
 interface Props {
   title: string;
   description?: string;
@@ -8,14 +11,17 @@ interface Props {
 }
 const {
   title,
-  description = "Personal blog of Dimas Bagus Prayogo Mukti — engineering, notes, and projects.",
+  description = "Personal site of Dimas Bagus Prayogo Mukti — engineering, notes, and projects.",
   canonical,
   type = "website",
-  image = "https://github.com/dimasbaguspm.png",
+  image,
 } = Astro.props;
 const site = Astro.site?.toString() ?? "https://dimasbaguspm.dev";
 const canonicalUrl = new URL(canonical ?? Astro.url.pathname, site).toString();
-const AUTHOR = "Dimas Bagus Prayogo Mukti";
+const profile = await getProfile();
+const ogImage = image ?? profile.avatar;
+const umamiSrc = process.env.UMAMI_SRC;
+const umamiId = process.env.UMAMI_ID;
 ---
 <!doctype html>
 <html lang="en">
@@ -25,17 +31,20 @@ const AUTHOR = "Dimas Bagus Prayogo Mukti";
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" href="https://github.com/dimasbaguspm.png" />
+    <link rel="icon" href={profile.avatar} />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={image} />
-    <meta name="author" content={AUTHOR} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="author" content={profile.name} />
+    {umamiSrc && umamiId && (
+      <script is:inline async src={umamiSrc} data-website-id={umamiId} />
+    )}
     <script type="application/ld+json" is:inline set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": type === "article" ? "Article" : "WebSite",
@@ -43,36 +52,22 @@ const AUTHOR = "Dimas Bagus Prayogo Mukti";
       headline: title,
       description,
       url: canonicalUrl,
-      image,
-      author: { "@type": "Person", name: AUTHOR },
+      image: ogImage,
+      author: { "@type": "Person", name: profile.name, url: profile.blog },
     })} />
   </head>
-  <body>
-    <header>
-      <nav class="nav">
-        <a href="/">dimasbaguspm.dev</a>
-        <span class="links">
-          <a href="/posts">Articles</a>
-        </span>
+  <body class="bg-white text-neutral-900 antialiased">
+    <header class="mx-auto flex max-w-3xl items-center justify-between px-4 py-6">
+      <a href="/" class="font-semibold">{new URL(site).host}</a>
+      <nav class="text-sm text-neutral-500">
+        <a href="/posts" class="transition-colors hover:text-neutral-900">Articles</a>
       </nav>
     </header>
-    <main>
+    <main class="mx-auto max-w-3xl px-4">
       <slot />
     </main>
-    <footer>
-      <p>© {new Date().getFullYear()} {AUTHOR}</p>
+    <footer class="mx-auto max-w-3xl px-4 py-12 text-sm text-neutral-500">
+      <p>© {new Date().getFullYear()} {profile.name}</p>
     </footer>
   </body>
 </html>
-
-<style is:global>
-  :root { --accent: #2f6f4f; --fg: #1a1a1a; --muted: #6b7280; }
-  * { box-sizing: border-box; }
-  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: var(--fg); background: #fff; }
-  .nav { display: flex; justify-content: space-between; max-width: 720px; margin: 0 auto; padding: 1.2rem 1rem; }
-  .nav a { color: var(--fg); text-decoration: none; font-weight: 600; }
-  .nav .links a { margin-left: 1rem; font-weight: 400; color: var(--muted); }
-  main { max-width: 720px; margin: 0 auto; padding: 1rem; }
-  footer { max-width: 720px; margin: 2rem auto; padding: 1rem; color: var(--muted); font-size: 14px; }
-  a { color: var(--accent); }
-</style>

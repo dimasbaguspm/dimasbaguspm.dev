@@ -1,40 +1,41 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { readPost, renderMarkdown } from "../../lib/posts";
+import { getProfile, readPost, renderMarkdown } from "../../lib/posts";
 export const prerender = false;
 const { slug } = Astro.params;
 const post = slug ? await readPost(slug) : null;
 if (!post) return Astro.redirect("/posts", 404);
 const html = renderMarkdown(post.body);
-const author = post.author ?? "Dimas Bagus Prayogo Mukti";
-const avatar = "https://github.com/dimasbaguspm.png";
+const profile = await getProfile();
 ---
-<Base title={post.title} description={post.description} type="article" image={avatar}>
-  <article>
-    <header class="post-head">
-      <h1>{post.title}</h1>
-      <div class="byline">
-        <img src={avatar} alt={author} width="32" height="32" />
-        <span>{author}</span>
+<Base title={post.title} description={post.description} type="article">
+  <article class="py-8">
+    <header>
+      <h1 class="text-3xl font-bold tracking-tight">{post.title}</h1>
+      <div class="mt-4 flex items-center gap-3 text-sm text-neutral-500">
+        <img src={profile.avatar} alt={profile.name} width="28" height="28" class="rounded-full" />
+        <span>{profile.name}</span>
         {post.pubDate && <time datetime={post.pubDate}>{post.pubDate}</time>}
       </div>
       {post.tags.length > 0 && (
-        <ul class="tags">
+        <ul class="mt-2 flex gap-3 text-sm text-accent">
           {post.tags.map((t) => <li>#{t}</li>)}
         </ul>
       )}
     </header>
-    <Fragment set:html={html} />
+    <div class="prose-simple mt-8" set:html={html} />
   </article>
 </Base>
 
 <style>
-  .post-head h1 { margin-bottom: 0.4rem; }
-  .byline { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); font-size: 14px; }
-  .byline img { border-radius: 50%; }
-  .tags { list-style: none; display: flex; gap: 0.5rem; padding: 0; margin: 0.5rem 0 1.5rem; color: var(--accent); font-size: 14px; }
-  article { line-height: 1.7; }
-  article :global(pre) { background: #f6f8fa; padding: 1rem; overflow: auto; border-radius: 6px; }
-  article :global(img) { max-width: 100%; }
-  article :global(h2) { margin-top: 2rem; }
+  .prose-simple { line-height: 1.7; }
+  .prose-simple :global(h2) { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; }
+  .prose-simple :global(p) { margin: 1rem 0; color: #262626; }
+  .prose-simple :global(a) { color: var(--color-accent); text-decoration: underline; }
+  .prose-simple :global(pre) { background: #f6f8fa; padding: 1rem; overflow: auto; border-radius: 8px; margin: 1rem 0; }
+  .prose-simple :global(code) { font-size: 0.9em; }
+  .prose-simple :global(img) { max-width: 100%; border-radius: 8px; }
+  .prose-simple :global(ul, ol) { padding-left: 1.5rem; margin: 1rem 0; list-style: disc; }
+  .prose-simple :global(ol) { list-style: decimal; }
+  .prose-simple :global(blockquote) { border-left: 3px solid var(--color-accent); padding-left: 1rem; color: #525252; }
 </style>

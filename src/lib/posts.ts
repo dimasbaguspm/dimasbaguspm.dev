@@ -1,53 +1,132 @@
 import { Octokit } from "@octokit/rest";
 import { marked } from "marked";
+import { createHighlighter } from "shiki";
+import { SpanStatusCode } from "@opentelemetry/api";
+import { log, tracer } from "./otel"; // starts the SDK when OTEL_HOST is set
+import { cached } from "./cache";
 
 const TOKEN = process.env.GITHUB_TOKEN ?? "";
 const [OWNER, REPO] = (
-  process.env.GITHUB_REPO ?? "dimasbaguspm/dimasbaguspm.dev"
+  process.env.GITHUB_REPOSITORY ?? "dimasbaguspm/dimasbaguspm.dev"
 ).split("/");
-const POSTS_PATH = process.env.POSTS_PATH ?? "content/posts";
+const POSTS_PATH = "content/posts";
 
 const octokit = new Octokit({ auth: TOKEN || undefined });
+
+// Runs a GitHub API call inside an OTEL span + error log.
+async function gh<T>(name: string, fn: () => Promise<T>): Promise<T> {
+  return tracer.startActiveSpan(name, async (span) => {
+    try {
+      return await fn();
+    } catch (e) {
+      span.setStatus({
+        code: SpanStatusCode.ERROR,
+        message: (e as Error).message,
+      });
+      log.error("github request failed", {
+        operation: name,
+        error: (e as Error).message,
+      });
+      throw e;
+    } finally {
+      span.end();
+    }
+  });
+}
+
+const highlighter = await createHighlighter({
+  themes: ["github-light"],
+  langs: ["ts", "js", "bash", "json", "markdown", "css", "html"],
+});
+
+marked.use({
+  renderer: {
+    code({ text, lang }) {
+      return highlighter.codeToHtml(text, {
+        lang: lang || "text",
+        theme: "github-light",
+      });
+    },
+  },
+});
 
 export interface Post {
   slug: string;
   title: string;
   description?: string;
   pubDate?: string;
-  author?: string;
   tags: string[];
   body: string;
 }
 
-// ponytail: in-memory TTL cache, avoids hammering GitHub API per request
-const cache = new Map<string, { at: number; data: unknown }>();
-const TTL = 60_000;
+export interface Profile {
+  name: string;
+  avatar: string;
+  bio: string | null;
+  blog: string | null;
+  login: string;
+}
+
+/** GitHub profile — the single source of truth for all personal info. */
+export async function getProfile(): Promise<Profile> {
+  return cached("profile", async () => {
+    try {
+      const { data } = await gh("github.getUser", () =>
+        octokit.rest.users.getByUsername({ username: OWNER }),
+      );
+      return {
+        name: data.name ?? OWNER,
+        avatar: data.avatar_url,
+        bio: data.bio,
+        blog: data.blog,
+        login: data.login,
+      };
+    } catch {
+      // GitHub unreachable → degrade instead of 500ing the whole site
+      return {
+        name: OWNER,
+        avatar: `https://github.com/${OWNER}.png`,
+        bio: null,
+        blog: null,
+        login: OWNER,
+      };
+    }
+  });
+}
 
 async function listFiles(path: string) {
-  try {
-    const { data } = await octokit.rest.repos.getContent({
-      owner: OWNER,
-      repo: REPO,
-      path,
-    });
-    return Array.isArray(data) ? data : [];
-  } catch {
-    return [];
-  }
+  return cached(`files:${path}`, () =>
+    gh("github.listFiles", async () => {
+      try {
+        const { data } = await octokit.rest.repos.getContent({
+          owner: OWNER,
+          repo: REPO,
+          path,
+        });
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return []; // 404 or rate-limited → degrade to no posts
+      }
+    }),
+  );
 }
 
 async function readFile(path: string): Promise<string | null> {
-  try {
-    const { data } = await octokit.rest.repos.getContent({
-      owner: OWNER,
-      repo: REPO,
-      path,
-    });
-    if (Array.isArray(data) || data.type !== "file") return null;
-    return Buffer.from(data.content, "base64").toString("utf8");
-  } catch {
-    return null; // 404 or rate-limited → treat as missing, site degrades to empty
-  }
+  return cached(`file:${path}`, () =>
+    gh("github.readFile", async () => {
+      try {
+        const { data } = await octokit.rest.repos.getContent({
+          owner: OWNER,
+          repo: REPO,
+          path,
+        });
+        if (Array.isArray(data) || data.type !== "file") return null;
+        return Buffer.from(data.content, "base64").toString("utf8");
+      } catch {
+        return null; // 404 or rate-limited → treat as missing
+      }
+    }),
+  );
 }
 
 function parseFrontmatter(raw: string): {
@@ -78,18 +157,16 @@ function parseFrontmatter(raw: string): {
 }
 
 export async function listPosts(): Promise<Post[]> {
-  const key = "list";
-  const c = cache.get(key);
-  if (c && Date.now() - c.at < TTL) return c.data as Post[];
-  const mds = (await listFiles(POSTS_PATH)).filter(
-    (f) => f.type === "file" && f.name.endsWith(".md"),
-  );
-  const posts = (
-    await Promise.all(mds.map((f) => readPost(f.name.replace(/\.md$/, ""))))
-  ).filter((p): p is Post => p !== null);
-  posts.sort((a, b) => (b.pubDate ?? "").localeCompare(a.pubDate ?? ""));
-  cache.set(key, { at: Date.now(), data: posts });
-  return posts;
+  return cached("posts", async () => {
+    const mds = (await listFiles(POSTS_PATH)).filter(
+      (f) => f.type === "file" && f.name.endsWith(".md"),
+    );
+    const posts = (
+      await Promise.all(mds.map((f) => readPost(f.name.replace(/\.md$/, ""))))
+    ).filter((p): p is Post => p !== null);
+    posts.sort((a, b) => (b.pubDate ?? "").localeCompare(a.pubDate ?? ""));
+    return posts;
+  });
 }
 
 export async function readPost(slug: string): Promise<Post | null> {

@@ -1,4 +1,3 @@
-# Astro SSR (standalone node) — posts fetched from GitHub at request time
 FROM node:22-alpine AS build
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@10.34.5 --activate
@@ -9,7 +8,13 @@ RUN pnpm run build
 
 FROM node:22-alpine
 WORKDIR /app
+
 ENV NODE_ENV=production
+ENV REDIS_HOST=
+ENV OTEL_HOST=
+ENV UMAMI_SRC=
+ENV UMAMI_ID=
+
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json

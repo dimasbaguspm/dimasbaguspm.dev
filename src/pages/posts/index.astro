@@ -1,23 +1,19 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { listPosts } from "../../lib/posts";
+import { getProfile, listPosts } from "../../lib/posts";
 export const prerender = false;
-const posts = await listPosts();
+const [profile, posts] = await Promise.all([getProfile(), listPosts()]);
 ---
-<Base title="Articles — dimasbaguspm.dev">
-  <h1>Articles</h1>
-  <ul class="posts">
+<Base title={`Articles — ${profile.name}`}>
+  <h1 class="py-8 text-3xl font-bold tracking-tight">Articles</h1>
+  <ul>
     {posts.map((p) => (
-      <li>
-        <a href={`/posts/${p.slug}`}>{p.title}</a>
-        {p.pubDate && <time datetime={p.pubDate}>{p.pubDate}</time>}
+      <li class="flex items-baseline gap-3 py-2">
+        <a href={`/posts/${p.slug}`} class="hover:underline">{p.title}</a>
+        {p.pubDate && (
+          <time datetime={p.pubDate} class="text-sm text-neutral-500">{p.pubDate}</time>
+        )}
       </li>
     ))}
   </ul>
 </Base>
-
-<style>
-  .posts { list-style: none; padding: 0; }
-  .posts li { margin: 0.6rem 0; display: flex; gap: 0.8rem; align-items: baseline; }
-  .posts time { color: var(--muted); font-size: 14px; }
-</style>

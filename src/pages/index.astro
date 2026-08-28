@@ -1,33 +1,42 @@
 ---
 import Base from "../layouts/Base.astro";
-import { listPosts } from "../lib/posts";
+import { getProfile, listPosts } from "../lib/posts";
 export const prerender = false;
+const profile = await getProfile();
 const posts = await listPosts();
 ---
-<Base title="Dimas Bagus Putra Mahottama">
-  <section class="hero">
-    <h1>Hey, I'm Dimas.</h1>
-    <p>I write about engineering, systems, and the things I build. Minimal, fast, and friendly to search engines.</p>
+<Base title={profile.name} description={profile.bio ?? undefined}>
+  <section class="py-12">
+    <img
+      src={profile.avatar}
+      width={96}
+      height={96}
+      alt={profile.name}
+      class="rounded-full border border-neutral-200"
+    />
+    <h1 class="mt-5 text-4xl font-bold tracking-tight">{profile.name}</h1>
+    <p class="mt-3 max-w-xl text-neutral-600">{profile.bio}</p>
+    {profile.blog && (
+      <a href={profile.blog} class="mt-4 inline-block font-medium text-accent hover:underline">
+        {profile.blog.replace(/^https?:\/\//, "")} ↗
+      </a>
+    )}
   </section>
 
   <section>
-    <h2>Latest articles</h2>
-    <ul class="posts">
+    <h2 class="text-xl font-semibold">Latest articles</h2>
+    <ul class="mt-4">
       {posts.slice(0, 5).map((a) => (
-        <li>
-          <a href={`/posts/${a.slug}`}>{a.title}</a>
-          {a.pubDate && <time datetime={a.pubDate}>{a.pubDate}</time>}
+        <li class="flex items-baseline gap-3 py-2">
+          <a href={`/posts/${a.slug}`} class="hover:underline">{a.title}</a>
+          {a.pubDate && (
+            <time datetime={a.pubDate} class="text-sm text-neutral-500">{a.pubDate}</time>
+          )}
         </li>
       ))}
     </ul>
-    <a class="more" href="/posts">All articles →</a>
+    <a href="/posts" class="mt-3 inline-block font-medium text-accent hover:underline">
+      All articles →
+    </a>
   </section>
 </Base>
-
-<style>
-  .hero h1 { font-size: 2.2rem; margin-bottom: 0.2rem; }
-  .posts { list-style: none; padding: 0; }
-  .posts li { margin: 0.6rem 0; display: flex; gap: 0.8rem; align-items: baseline; }
-  .posts time { color: var(--muted); font-size: 14px; }
-  .more { display: inline-block; margin-top: 0.5rem; }
-</style>

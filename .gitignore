@@ -10,8 +10,3 @@ node_modules/
 !.env.example
 # os
 .DS_Store
-# content runtime writes (uploaded assets dir is mounted, not committed)
-# NOTE (Phase 7): assets are now committed to the repo via the GitHub-backed
-# admin, so public/assets/uploads IS tracked. Removed from ignore.
-# public/assets/uploads/
-screenshots/ and shot.mjs

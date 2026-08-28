@@ -5,7 +5,10 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 4321
-      GITHUB_REPO: dimasbaguspm/dimasbaguspm.dev
-      POSTS_PATH: content/posts
+      GITHUB_REPOSITORY: dimasbaguspm/dimasbaguspm.dev
       GITHUB_TOKEN: ${GITHUB_TOKEN}
+      REDIS_HOST: ${REDIS_HOST:-}
+      OTEL_HOST: ${OTEL_HOST:-}
+      UMAMI_SRC: ${UMAMI_SRC:-}
+      UMAMI_ID: ${UMAMI_ID:-}
     restart: unless-stopped
