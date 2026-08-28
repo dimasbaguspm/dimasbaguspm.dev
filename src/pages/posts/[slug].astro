@@ -7,8 +7,12 @@ const post = slug ? await readPost(slug) : null;
 if (!post) return Astro.redirect("/posts", 404);
 const html = renderMarkdown(post.body);
 const profile = await getProfile();
+const ogImage = new URL(
+  `/og/${post.slug}.png`,
+  Astro.site ?? "https://dimasbaguspm.dev",
+).toString();
 ---
-<Base title={post.title} description={post.description} type="article">
+<Base title={post.title} description={post.description} type="article" image={ogImage}>
   <article class="py-8">
     <header>
       <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{post.title}</h1>

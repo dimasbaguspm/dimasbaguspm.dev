@@ -103,27 +103,46 @@ export interface Repo {
   description: string | null;
   language: string | null;
   stars: number;
+  forks: number;
+  homepage: string | null;
+  topics: string[];
   url: string;
 }
 
-/** Top public repos (non-forks by stars) — the projects section. */
-export async function listProjects(limit = 6): Promise<Repo[]> {
-  return cached(`repos:${limit}`, async () => {
+async function listRepos(): Promise<Repo[]> {
+  return cached("repos", async () => {
     const { data } = await gh("github.listRepos", () =>
-      octokit.rest.repos.listForUser({ username: OWNER, per_page: 100 }),
+      octokit.rest.repos.listForUser({
+        username: OWNER,
+        per_page: 100,
+      }),
     );
     return data
       .filter((r) => !r.fork)
-      .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
-      .slice(0, limit)
       .map((r) => ({
         name: r.name,
         description: r.description,
         language: r.language ?? null,
         stars: r.stargazers_count ?? 0,
+        forks: r.forks_count ?? 0,
+        homepage: r.homepage ?? null,
+        topics: r.topics ?? [],
         url: r.html_url,
-      }));
+      }))
+      .sort((a, b) => b.stars - a.stars);
   });
+}
+
+/** Top public repos by stars — the landing projects section. */
+export async function listProjects(limit = 6): Promise<Repo[]> {
+  return (await listRepos()).slice(0, limit);
+}
+
+/** All repos tagged with a topic, e.g. "personal-project". */
+export async function listProjectsByTag(
+  tag = "personal-project",
+): Promise<Repo[]> {
+  return (await listRepos()).filter((r) => r.topics.includes(tag));
 }
 
 /** Raw Markdown document (frontmatter + body), e.g. the CV. */

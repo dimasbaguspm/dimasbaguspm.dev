@@ -69,3 +69,15 @@ export async function cached<T>(key: string, fn: () => Promise<T>): Promise<T> {
   await set(key, data);
   return data;
 }
+
+/** Binary variant, stored base64 in Redis (e.g. generated OG images). */
+export async function cachedBuffer(
+  key: string,
+  fn: () => Promise<Buffer>,
+): Promise<Buffer> {
+  const hit = await get<string>(key);
+  if (hit) return Buffer.from(hit, "base64");
+  const data = await fn();
+  await set(key, data.toString("base64"));
+  return data;
+}
