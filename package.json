@@ -11,7 +11,12 @@
     "astro": "astro",
     "check": "astro check",
     "lint": "oxlint src",
-    "format": "oxfmt src"
+    "format": "oxfmt src",
+    "precommit": "pnpm run lint && pnpm run check",
+    "postinstall": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm run precommit"
   },
   "dependencies": {
     "@astrojs/node": "9.5.5",
@@ -35,6 +40,7 @@
     "@types/node": "22.20.1",
     "oxfmt": "0.13.0",
     "oxlint": "1.79.0",
+    "simple-git-hooks": "^2.14.0",
     "typescript": "5.9.3"
   },
   "pnpm": {

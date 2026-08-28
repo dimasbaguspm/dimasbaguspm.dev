@@ -119,7 +119,7 @@ export async function listProjects(limit = 6): Promise<Repo[]> {
       .map((r) => ({
         name: r.name,
         description: r.description,
-        language: r.language,
+        language: r.language ?? null,
         stars: r.stargazers_count ?? 0,
         url: r.html_url,
       }));
