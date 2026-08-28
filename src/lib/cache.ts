@@ -14,29 +14,30 @@ let ready = false;
 // ponytail: per-process state — fine single-instance, per-instance TTL drift
 // if you ever run multiple replicas behind a load balancer.
 if (host) {
+  log.info("cache: connecting to redis", { host });
   redis = new Redis(`redis://${host}`, {
     maxRetriesPerRequest: 1,
     enableOfflineQueue: false,
   });
-  let state = "down";
+  let state = "connecting"; // starts non-"down" so the first failure is logged
   redis.on("ready", () => {
     ready = true;
     if (state !== "up") {
       state = "up";
-      log.info("cache: redis ready", { host });
+      log.info("cache: redis connected", { host });
     }
   });
   redis.on("error", (e) => {
     ready = false;
     if (state !== "down") {
       state = "down";
-      log.warn("cache: redis unavailable — direct GitHub hits", {
+      log.warn("cache: redis connection failed — direct GitHub hits", {
         error: e.message,
       });
     }
   });
 } else {
-  log.warn("cache: REDIS_HOST unset — direct GitHub hits");
+  log.warn(`cache: redis not configured — direct GitHub hits`);
 }
 
 async function get<T>(key: string): Promise<T | undefined> {

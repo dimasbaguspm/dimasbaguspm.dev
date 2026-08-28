@@ -80,3 +80,18 @@ export const log = {
 };
 
 export const tracer = trace.getTracer("dimasbaguspm.dev");
+
+// Global error net: every unhandled error lands in OTEL too (console stays as
+// the fallback when no endpoint is configured). The short grace period lets
+// the OTLP export flush before exiting.
+process.on("uncaughtException", (e) => {
+  log.error("uncaught exception", { error: e.message, stack: e.stack });
+  console.error("uncaught exception:", e);
+  setTimeout(() => process.exit(1), 100).unref();
+});
+process.on("unhandledRejection", (reason) => {
+  const e = reason instanceof Error ? reason : new Error(String(reason));
+  log.error("unhandled rejection", { error: e.message, stack: e.stack });
+  console.error("unhandled rejection:", e);
+  throw reason;
+});
