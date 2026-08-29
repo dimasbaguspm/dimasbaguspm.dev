@@ -11,25 +11,21 @@ tags: ["review", "astra-honda", "jombor", "magelang"]
 | **When** | August 2026 |
 | **Rating** | ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking ahead, even if the wait still tests your patience. |
 
-Last Thursday I opened the Motorku X app to book a service slot for Saturday. I aimed for 09:00, but the two earlier windows, 08:00 and 08:30, were already full, so 09:00 was what I got. The app also drops a reminder into your calendar, and on Saturday morning that little notification was what made the appointment feel real.
+I booked the slot last Thursday, through the Motorku X app, for a Saturday service. I wanted 09:00. The two earlier windows were already full, so 09:00 was what I got, and the app quietly dropped a reminder into my calendar so I would not forget. On Saturday morning that little notification was what made the appointment feel real.
 
-I woke slow. At 08:00 I was still at home, making breakfast and playing with the cats. No rush. By 08:30 it was time to go, so I took my CBR 150R and rode toward ASTRA Honda Jombor on Magelang Street.
+I woke slow. Breakfast at home, the cats underfoot, no rush at all. When it was time I took my CBR 150R and rode toward ASTRA Honda Jombor on Magelang Street, arriving just before nine.
 
-I pulled up to the gate at 08:50. The security asked the usual thing: dealer visit, or service? I said service, and that I had booked. He handed me receipt **B010** and pointed me to the west side to park.
+At the gate the security asked the usual thing: dealer visit, or service? I said service, and that I had booked. He handed me receipt **B010** and pointed me to the west side. That is when I saw the lot. Motorcycles were everywhere, easily sixty of them already, and mine made sixty-one. This was a full house.
 
-Then I saw the lot. Motorcycles were everywhere, easily sixty of them already, and mine made sixty-one. This was a full house.
+Inside, the service advisor told me what you hear at every busy workshop: just wait, we will call you. So I settled into the waiting room, which, to be fair, is a proper one. Air conditioning, free drinks, snacks. I counted maybe forty people waiting. Two of us, myself included, held a B ticket from a booking. Everyone else was a walk-in with an R ticket. That single letter is the whole point of why I bothered to book.
 
-Inside, I found the service advisor and asked what to do. The answer was the same you hear at every busy workshop: just wait, we will call you. So I settled into the waiting room, which, to be fair, is a proper one. Air conditioning, free drinks, snacks. I counted maybe forty people waiting. Two of us, myself included, held a B ticket from a booking. Everyone else was a walk-in with an R ticket. That single letter is the whole point of why I bothered to book.
+The wait tested me. At quarter past nine I was still sitting there, and for a moment I wondered if the booking had been useless. I checked with the security who gave me the ticket. He confirmed it was legit and told me to keep waiting. Then the service advisor finally called me in, we walked through the bike and the problem I had noticed before, and I talked more than I should have. That is the point of the call, though: say what is wrong while it is still on the plan.
 
-At 09:00 I was still waiting. At 09:25 I was still waiting, and for a moment I wondered if the booking had been useless. I checked with the security who gave me the ticket. He confirmed it was legit, a real Motorku X booking, and told me to keep waiting.
+They asked the one question that shapes your whole day: wait on site, or step out and come back when it is done? I chose to step out and grabbed a Grab home.
 
-Then at 09:35 the service advisor finally called me in. We walked through the bike and the problem I had noticed before. I talked more than I should have, but that is the point of the call: say what is wrong while it is still on the plan.
+The rest of the morning ran without me. Around half past ten the mechanic messaged on WhatsApp to say the bike was fine and offered to change the oil too, an SPX. I said yes. Late morning the service advisor confirmed through the app that my motorcycle was in final inspection, and soon after the cashier messaged that I could come pick it up and pay.
 
-They validated it, and then asked the one question that shapes your whole day: wait on site, or step out and come back when it is done? I chose to step out. I grabbed a Grab and went home.
-
-Around 10:30 the mechanic messaged me on WhatsApp to say the bike was fine, and offered to change the oil too, an SPX. I said yes. At 11:40 the service advisor confirmed through the app that my motorcycle was in final inspection, and at 11:50 the cashier messaged me on WhatsApp that I could come pick it up and pay.
-
-By 12:10 I was back at the workshop, paid, and done. And here is the part worth sitting with: people who had arrived earlier than me were still sitting there waiting to be called by the service advisor, while my bike was already serviced and ready to ride home.
+By a little past noon I was back at the workshop, paid, and done. And here is the part worth sitting with: people who had arrived earlier than me were still sitting there waiting to be called by the service advisor, while my bike was already serviced and ready to ride home.
 
 Here is the proof: my service ticket (B010) and the final receipt from that August 2026 visit. The number starting with B is the detail worth noticing.
 
