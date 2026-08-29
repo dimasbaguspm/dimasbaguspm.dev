@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import Pill from "../../components/Pill.astro";
+import ShareButton from "../../components/ShareButton.astro";
 import { estimateReadingTime, formatDate, getPostHistory, getProfile, readPost, renderMarkdown } from "../../lib/posts";
 export const prerender = false;
 const { slug } = Astro.params;
@@ -33,13 +34,18 @@ const ogImage = new URL(
           <><span class="h-1 w-1 rounded-full bg-neutral-300"></span><span>updated {formatDate(lastUpdated)}</span></>
         )}
       </div>
-      {post.tags.length > 0 && (
-        <ul class="mt-2 flex flex-wrap gap-1.5">
-          {post.tags.map((t) => (
-            <li><Pill label={`#${t}`} /></li>
-          ))}
-        </ul>
-      )}
+      <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
+        {post.tags.length > 0 ? (
+          <ul class="flex flex-wrap gap-1.5">
+            {post.tags.map((t) => (
+              <li><Pill label={`#${t}`} /></li>
+            ))}
+          </ul>
+        ) : (
+          <span></span>
+        )}
+        <ShareButton title={post.title} text={post.description} />
+      </div>
     </header>
     <div class="prose-simple mt-8" set:html={html} />
     {history.length > 0 && (

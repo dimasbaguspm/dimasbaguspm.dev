@@ -1,0 +1,47 @@
+---
+import { Share2 } from "lucide-astro";
+interface Props {
+  title?: string;
+  text?: string;
+}
+const { title, text } = Astro.props;
+---
+<button
+  type="button"
+  data-share-btn
+  data-title={title}
+  data-text={text}
+  class="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs font-medium text-neutral-700 transition-colors hover:border-neutral-300 hover:bg-neutral-50"
+  aria-label="Share"
+>
+  <Share2 class="h-3.5 w-3.5" />
+  Share
+</button>
+
+<script>
+  for (const btn of document.querySelectorAll("[data-share-btn]")) {
+    btn.addEventListener("click", async () => {
+      const el = btn as HTMLElement;
+      const title = el.dataset.title || document.title;
+      const text = el.dataset.text || "";
+      const url = window.location.href;
+      const original = el.textContent;
+      const setTemp = (msg: string) => {
+        el.textContent = msg;
+        setTimeout(() => (el.textContent = original), 1500);
+      };
+      try {
+        if (navigator.share) {
+          await navigator.share({ title, text, url });
+          return;
+        }
+      } catch {}
+      try {
+        await navigator.clipboard.writeText(url);
+        setTemp("Copied!");
+      } catch {
+        window.prompt("Copy link:", url);
+      }
+    });
+  }
+</script>
