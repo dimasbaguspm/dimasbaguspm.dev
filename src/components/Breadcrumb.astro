@@ -5,17 +5,17 @@ interface Props {
 }
 const { items } = Astro.props;
 ---
-<nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-1 text-sm text-neutral-500">
-  <a href="/" class="transition-colors hover:text-neutral-900">Home</a>
+<nav aria-label="Breadcrumb" class="flex items-center gap-1 overflow-hidden whitespace-nowrap text-sm text-neutral-500">
+  <a href="/" class="shrink-0 transition-colors hover:text-neutral-900">Home</a>
   {items.map((item) => (
     <Fragment>
-      <ChevronRight class="h-3.5 w-3.5" />
+      <ChevronRight class="h-3.5 w-3.5 shrink-0 text-neutral-400" />
       {item.href ? (
-        <a href={item.href} class="transition-colors hover:text-neutral-900">
+        <a href={item.href} class="min-w-0 truncate transition-colors hover:text-neutral-900">
           {item.label}
         </a>
       ) : (
-        <span class="text-neutral-700">{item.label}</span>
+        <span class="min-w-0 flex-1 truncate text-neutral-700">{item.label}</span>
       )}
     </Fragment>
   ))}

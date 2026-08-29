@@ -48,6 +48,48 @@ import { ChevronLeft, ChevronRight, X } from "lucide-astro";
 </div>
 
 <script>
+  // Instagram-like grid for 2+ consecutive markdown media
+  const proseEl = document.querySelector(".prose-simple") as HTMLElement | null;
+  if (proseEl) {
+    const allMedias = Array.from(proseEl.querySelectorAll("[data-md-media]")) as HTMLElement[];
+    let group: HTMLElement[] = [];
+    let groups: HTMLElement[][] = [];
+    const isMediaParentP = (el: HTMLElement) =>
+      el.tagName === "P" && el.children.length === 1 && el.querySelector("[data-md-media]") !== null;
+    for (const m of allMedias) {
+      const parent = m.parentElement as HTMLElement | null;
+      const unit: HTMLElement = parent && isMediaParentP(parent) ? parent : m;
+      if (group.length === 0) group.push(unit);
+      else {
+        const prev = group[group.length - 1];
+        if (prev.nextElementSibling === unit) group.push(unit);
+        else {
+          if (group.length >= 2) groups.push([...group]);
+          group = [unit];
+        }
+      }
+    }
+    if (group.length >= 2) groups.push([...group]);
+    groups.forEach((g) => {
+      const n = g.length;
+      let cols = n === 2 ? "grid-cols-2" : n === 3 ? "grid-cols-3" : n === 4 ? "grid-cols-2" : "grid-cols-3";
+      const container = document.createElement("div");
+      container.className = `grid ${cols} gap-2 my-4 not-prose`;
+      g[0].parentNode!.insertBefore(container, g[0]);
+      g.forEach((unit) => {
+        const media = (unit.querySelector("[data-md-media]") as HTMLElement) || unit;
+        media.classList.remove("max-h-[480px]", "mx-auto");
+        media.classList.add("!m-0", "aspect-square", "h-full", "w-full", "object-cover");
+        if (unit !== media) {
+          (unit as HTMLElement).style.margin = "0";
+          (unit as HTMLElement).style.padding = "0";
+        }
+        container.appendChild(media);
+        if (unit !== media) unit.remove();
+      });
+    });
+  }
+
   const lb = document.getElementById("md-lightbox") as HTMLElement | null;
   if (lb) {
     const stageImg = lb.querySelector("[data-lb-img]") as HTMLImageElement;

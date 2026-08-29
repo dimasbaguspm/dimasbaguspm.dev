@@ -71,22 +71,47 @@
   padding-left: 1rem;
   color: #525252;
 }
-/* GFM tables — horizontal scroll on narrow screens */
+/* GFM tables — polished, rounded, striped */
 .prose-simple table {
   display: block;
   width: 100%;
   overflow-x: auto;
-  border-collapse: collapse;
-  margin: 1rem 0;
-  font-size: 0.9em;
-}
-.prose-simple th,
-.prose-simple td {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1.25rem 0;
+  font-size: 0.875em;
   border: 1px solid #e5e7eb;
-  padding: 0.5rem 0.75rem;
-  text-align: left;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.prose-simple thead {
+  background: #f9fafb;
 }
 .prose-simple th {
   background: #f9fafb;
   font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+.prose-simple th,
+.prose-simple td {
+  border-right: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-simple th:last-child,
+.prose-simple td:last-child {
+  border-right: 0;
+}
+.prose-simple tr:last-child td {
+  border-bottom: 0;
+}
+.prose-simple tbody tr:nth-child(even) {
+  background: #fcfcfc;
+}
+.prose-simple tbody tr:hover {
+  background: #f5f5f5;
 }

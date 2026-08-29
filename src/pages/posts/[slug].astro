@@ -11,8 +11,7 @@ const post = slug ? await readPost(slug) : null;
 if (!post) return Astro.redirect("/posts", 404);
 const html = renderMarkdown(post.body);
 const [profile, history] = await Promise.all([getProfile(), getPostHistory(slug!)]);
-const lastUpdated = history[0]?.date;
-const showUpdated = lastUpdated && lastUpdated.slice(0, 10) !== post.pubDate?.slice(0, 10);
+const lastUpdated = history[0]?.date || post.pubDate;
 const readingTime = estimateReadingTime(post.body);
 const ogImage = new URL(
   `/og/${post.slug}.png`,
@@ -28,12 +27,9 @@ const ogImage = new URL(
         <img src={profile.avatar} alt={profile.name} width="28" height="28" class="h-7 w-7 rounded-full border border-neutral-200" />
         <span>{profile.name}</span>
         <span class="h-1 w-1 rounded-full bg-neutral-300"></span>
-        {post.pubDate && <time datetime={post.pubDate}>{formatDate(post.pubDate)}</time>}
+        {lastUpdated && <time datetime={lastUpdated}>{formatDate(lastUpdated)}</time>}
         <span class="h-1 w-1 rounded-full bg-neutral-300"></span>
         <span>{readingTime}</span>
-        {showUpdated && lastUpdated && (
-          <><span class="h-1 w-1 rounded-full bg-neutral-300"></span><span>updated {formatDate(lastUpdated)}</span></>
-        )}
       </div>
       <div class="mt-2 flex flex-wrap items-center justify-between gap-2">
         {post.tags.length > 0 ? (

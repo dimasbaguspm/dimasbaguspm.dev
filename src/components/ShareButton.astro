@@ -30,12 +30,14 @@ const { title, text } = Astro.props;
         el.textContent = msg;
         setTimeout(() => (el.textContent = original), 1500);
       };
-      try {
-        if (navigator.share) {
+      if (navigator.share) {
+        try {
           await navigator.share({ title, text, url });
           return;
+        } catch (e) {
+          if ((e as DOMException)?.name === "AbortError") return;
         }
-      } catch {}
+      }
       try {
         await navigator.clipboard.writeText(url);
         setTemp("Copied!");
