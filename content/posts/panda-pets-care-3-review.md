@@ -9,7 +9,7 @@ tags: ["review", "pets", "magelang", "vet"]
 **Map:** https://maps.app.goo.gl/FidEN87XKyFabCcy6
 **Rating:** ⭐⭐⭐⭐ (4/5). The care is excellent. The bill grows because they give good advice first.
 
-I took my two cats, a male and a female, to Panda Pets and Care 3 to be sterilized.
+I took my two cats, Casper (male) and Hoki (female), to Panda Pets and Care 3 to be sterilized.
 
 At first sight, the team advised something I did not expect: before any operation, they wanted vaccinations and grooming done first, to clear out fleas and lower the risk. It made sense. You do not want to cut into a cat carrying fleas and worms.
 
@@ -17,10 +17,10 @@ One staff member stood out. Her name is Stela, and she is the careful one. Every
 
 Here is roughly how it went, across two weeks:
 
-- First visit: sterilize the male cat (around 450k), plus flea treatment and worm medication for the female (180k).
-- The following week: tricat vaccination for the female (200k), then finally her steril (650k).
+- First visit: sterilize Casper, the male (around 450k), plus flea treatment and worm medication for Hoki, the female (180k).
+- The following week: tricat vaccination for Hoki (200k), then finally her steril (650k).
 
-Long story short, both cats came home well. The service was excellent. While your cat is staying with them, they update you twice a day, so you are never left wondering how things are going.
+Long story short, both cats came home well. Casper and Hoki are fine. The service was excellent. While your cat is staying with them, they update you twice a day, so you are never left wondering how things are going.
 
 The place itself is a bit small. That is fine. What matters is the hands and the judgment, and both are good here.
 
