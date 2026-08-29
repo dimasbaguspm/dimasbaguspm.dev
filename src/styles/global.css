@@ -123,23 +123,18 @@
   background: #fff;
   margin: 1rem 0;
   overflow: auto;
-  min-height: 120px;
 }
 .mermaid-wrap .mermaid {
   margin: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
   padding: 1rem;
   border: 0;
   background: transparent;
-  min-height: 120px;
 }
 .mermaid-wrap .mermaid svg {
   max-width: 100%;
-  max-height: 480px;
   height: auto;
-  width: auto;
   transition: transform 0.15s ease;
 }
 .mermaid-toolbar {
@@ -170,32 +165,4 @@
 }
 .mermaid-toolbar button:hover { background: #f9fafb; }
 .mermaid-toolbar button:active { background: #f3f4f6; }
-.mermaid-wrap:fullscreen,
-.mermaid-wrap.is-fullscreen {
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  overflow: auto;
-  background: #fff;
-}
-.mermaid-wrap:fullscreen .mermaid,
-.mermaid-wrap.is-fullscreen .mermaid {
-  flex: 1;
-  min-height: 0;
-  align-items: center;
-}
-.mermaid-wrap:fullscreen .mermaid svg,
-.mermaid-wrap.is-fullscreen .mermaid svg {
-  max-height: calc(100vh - 3rem);
-  max-height: calc(100dvh - 3rem);
-  max-width: 100%;
-  height: auto;
-  width: auto;
-}
-.mermaid-wrap::backdrop { background: #fff; }
+.mermaid-wrap:fullscreen { padding: 1rem; overflow: auto; background: #fff; }
