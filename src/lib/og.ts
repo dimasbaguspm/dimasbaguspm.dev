@@ -31,16 +31,43 @@ function trunc(s: string, n: number): string {
   return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s;
 }
 
-// Glossy black gradient with deterministic random orientation from title length
-function glossyGradient(title: string): string {
-  const angles = [30, 65, 115, 135, 165, 210, 250, 310];
-  const angle = angles[title.length % angles.length];
-  // hash adds second dimension so same length titles still differ
-  const hash = [...title].reduce((a, c) => a + c.charCodeAt(0), 0);
-  if (hash % 2 === 0) {
-    return `linear-gradient(${angle}deg, #050507 0%, #161b22 22%, #0a0a0a 48%, #1a1f2e 78%, #000000 100%)`;
+const ANGLES = [30, 65, 115, 135, 165, 210, 250, 310];
+// dark pairs — all luminance <0.15 so white #f0f6fc stays AAA
+const PALETTE: Array<{ from: string; mid: string; to: string; w: number }> = [
+  { from: "#020617", mid: "#1e1b4b", to: "#0f172a", w: 20 }, // midnight navy
+  { from: "#052e16", mid: "#14532d", to: "#022c22", w: 18 }, // forest
+  { from: "#1a0b2e", mid: "#3b0764", to: "#1e1b4b", w: 16 }, // plum
+  { from: "#1c1917", mid: "#44403c", to: "#292524", w: 14 }, // espresso
+  { from: "#082f49", mid: "#0c4a6e", to: "#020617", w: 16 }, // oceanic
+  { from: "#450a0a", mid: "#7f1d1d", to: "#1c1917", w: 16 }, // crimson dusk
+];
+function hashStr(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
-  return `linear-gradient(${angle}deg, #000000 0%, #0d1117 28%, #1c2128 52%, #010409 100%)`;
+  return h >>> 0;
+}
+function glossyGradient(title: string, date?: string | null): string {
+  const seed = `${title}:${date ?? ""}`;
+  const h = hashStr(seed);
+  // weighted palette pick — percentages sum 100 via w
+  const r = h % 100;
+  let acc = 0;
+  let pick = PALETTE[0];
+  for (const p of PALETTE) {
+    acc += p.w;
+    if (r < acc) {
+      pick = p;
+      break;
+    }
+  }
+  const angle = ANGLES[(h >>> 8) % ANGLES.length];
+  // stop percentages vary 18-32 / 48-68 to add randomness still dark
+  const s1 = 18 + ((h >>> 16) % 15);
+  const s2 = 50 + ((h >>> 20) % 18);
+  return `linear-gradient(${angle}deg, ${pick.from} 0%, ${pick.mid} ${s1}%, ${pick.to} ${s2}%, #020205 100%)`;
 }
 
 /** GitHub-style 1200×630 social preview: avatar + type + title(2 lines) + metadata. */
@@ -85,7 +112,7 @@ export async function renderOg(
       display: "flex",
       width: 1200,
       height: 630,
-      background: glossyGradient(title),
+      background: glossyGradient(title, date),
       padding: "48px 56px",
       flexDirection: "column",
       justifyContent: "space-between",
