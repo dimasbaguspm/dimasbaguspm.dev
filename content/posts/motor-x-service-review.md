@@ -5,14 +5,20 @@ pubDate: 2026-08-29
 tags: ["review", "astra-honda", "jombor", "magelang"]
 ---
 
-**Venue:** ASTRA Honda Jombor Magelang Street
-**Booked via:** Motor X app, slot 09:00, ticket B010
-**Verdict:** ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking the slot, not walking in.
+**Venue:** ASTRA Honda Jombor, Magelang
+**Slot:** 09:00 via Motor X — ticket **B010**
+**Verdict:** ⭐⭐⭐⭐ (4/5) — the work is great, the B ticket is the shortcut.
 
-I booked a service slot through the Motor X app for 09:00 and got ticket B010. The service advisory called me at 09:30, I went home, and the mechanic confirmed the work done at 11:00. The cashier then confirmed I could pick the bike up at 11:30, so I came back, paid, and left. By 12:10 I was already home with the serviced bike. That is a clean, well run flow.
+Saturday, 08:55. The workshop is already full — bikes lined up, tickets in hands. I’m there for a booked slot, B010. The guy next to me arrived at the same time, holding R014.
 
-The service itself is excellent. When I returned to collect the bike, plenty of people were still waiting to be called by the service advisory, a few of them having arrived around the same time I did. They were on the regular queue, ticket R, not the booked one, B. That gap is the whole point of booking.
+09:30 — service advisory calls. Not to the bay, just to say “we’ve got it, you can head home.” So I do. That’s the first win: I don’t camp in the lobby.
 
-Bottom line: take the booking service instead of the regular walk in. You get the B on your ticket, not the R, and you skip the long wait for the service advisory to call your name. The workshop gets busy on weekends, so the booked slot is what keeps your day short. Book it, go home while they work, come back when they call.
+11:00 — mechanic calls: work done. 11:30 — cashier pings: ready for pickup. I ride back, pay, and by 12:10 the bike’s home. Three calls, one coffee at home, done.
 
-Book the slot. Get the B. Skip the R.
+When I come back at 11:30, R014 is still waiting to be called. Same arrival time, different letter. The B queue moved through advisory, lift, and cashier while the R queue was still waiting for its name.
+
+Jombor’s hands are good — the bike felt right on the ride back. Weekends are just busy, and busy punishes the walk-in. The B doesn’t make the work faster, it just gets you *into* the work.
+
+If you go on a weekend: book on Motor X, take the B, go home after the first call, return on the last. Don’t R it on a Saturday.
+
+**B > R.**
