@@ -1,27 +1,46 @@
 ---
-title: "My Saturday at ASTRA Honda Jombor Magelang: why I now always book ahead"
-description: "A simple, honest story of servicing my bike at ASTRA Honda Jombor Magelang, and the one habit that turned a long wait into a relaxed morning."
+title: "Booked, not lucky: my Saturday at ASTRA Honda Jombor, and the B ticket that still made me wait"
+description: "A simple, honest story of servicing my CBR 150R at ASTRA Honda Jombor Magelang in August 2026, booked through the Motorku X app. The booking was real, the wait was still long, and the B ticket is what kept it honest."
 pubDate: 2026-08-29
 tags: ["review", "astra-honda", "jombor", "magelang"]
 ---
 
-**Place:** ASTRA Honda Jombor Magelang Street
-**Rating:** ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking ahead.
+| | |
+|---|---|
+| **Place** | ASTRA Honda Jombor, Magelang Street |
+| **When** | August 2026 |
+| **Rating** | ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking ahead, even if the wait still tests your patience. |
 
-Last Saturday, in August 2026, I needed my bike serviced, so I opened the Motor X app and booked a slot for 09:00. The app gave me ticket number B010. I showed up right on time, a little early even, thinking I would be next.
+Last Thursday I opened the Motorku X app to book a service slot for Saturday. I aimed for 09:00. The earlier shifts, 08:00 to 08:30 and 08:30 to 09:00, were already full, so 09:00 it was. The app drops a reminder into your calendar, and on Saturday morning that notification is what told me the appointment was real.
 
-Here is how the morning actually went. At 09:30 the service advisor finally called me in. They took a look, told me what needed doing, and said I could go home and come back later. So I did. At 11:00 the mechanic texted that the work was done. The cashier then told me I could pick the bike up at 11:30. I rode back, paid, and by 12:10 I was home with a serviced bike.
+08:00. I was still at home, making breakfast and playing with the cats. No rush yet.
 
-A smooth morning, all things considered.
+08:30. Time to head out. I took my CBR 150R and rode toward ASTRA Honda Jombor on Magelang Street.
 
-When I returned to collect the bike, I noticed something. A few people had arrived around the same time as me, but they were still sitting there waiting to be called. The difference? They had walked in without a booking, so their ticket started with **R** instead of **B**. The R queue waits for the service advisor to call names one by one. The B queue, the booked one, skips straight to the front of the line.
+08:50. I arrived and rolled up to the gate. The security asked the usual question: dealer visit, or service? I said service, and that I had booked. They handed me receipt **B010** and pointed me to park on the west side.
 
-That small letter made the whole difference.
+My first look at the lot told the story. Motorcycles were parked everywhere, easily around 60 already, and mine made it 61. The place was full.
 
-So here is my advice if you ever service your bike here: book the slot through the app. You get the B on your ticket, not the R. You drop the bike, go home, and come back when they call you. On a busy weekend, when the place is full of people, that B is what keeps your day short.
+I went to the service advisor and confirmed what to do. They said the same thing you hear at every busy workshop: just wait inside, we will call you.
 
-Book the slot. Get the B. Skip the R. One letter turned my Saturday from a waiting room into a morning at home.
+09:00. I was still inside the office, waiting. To their credit, the waiting room is proper: air conditioning, free drinks, snacks. I counted maybe 40 people waiting. Two of us, myself included, had booked and held a B ticket. The rest were regular walk-ins with an R ticket. That letter is the whole point of booking.
 
-Here is the proof: my service ticket (B010) and the final receipt from that August 2026 visit to ASTRA Honda Jombor. The ticket number starting with B is the part worth noticing.
+09:25. Still not called. For a moment I wondered if the booking had been useless. I checked with the security who had given me the ticket. He confirmed it was legit, a real Motorku X booking, and told me to keep waiting.
+
+09:35. Finally, the service advisor called me in. We went through the bike and the problem I had noticed before. I talked more than I should have, but that is the point of the call: surface what is wrong while it is still on the lift plan.
+
+Long story short, they validated it, then asked the one question that shapes your day: wait on site, or step out and come back when it is done?
+
+13. I answered that I would wait outside the building. I grabbed a Grab and went home.
+
+14. Around 10:30, the mechanic messaged me on WhatsApp to confirm the bike was fine, and offered to also change the oil (SPX). I agreed.
+
+15. At 11:40, the service advisor confirmed through the Motorku X app that my motorcycle was in final inspection. At 11:50, a WhatsApp message from the cashier said I could pick the bike up and settle the payment.
+
+16. By 12:10 I was back at ASTRA Honda Jombor Magelang, paid, and done. And here is the part worth sitting with: people who had arrived earlier than me were still waiting to be called by the service advisor, while mine was already ready to go home, serviced.
+
+Book the slot. Get the B. Even when the wait tests you, that B is the only reason your name moves before the R crowd.
 
 ![My service ticket (B010) and receipt from ASTRA Honda Jombor, August 2026](https://s3-api.dimasbaguspm.dev/personal/astra-honda-jombor-2026-08.jpg)
+
+Book the slot. Get the B. Even when the wait tests you, that B is the only reason your name moves before the R crowd.
