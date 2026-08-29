@@ -52,15 +52,15 @@ const ogImage = new URL(
     <MediaLightbox />
     {history.length > 0 && (
       <section class="mt-8 border-t border-neutral-200 pt-4">
-        <h2 class="text-xs font-semibold uppercase tracking-wide text-neutral-500">History</h2>
-        <p class="mt-1 text-xs text-neutral-500">{history.length} version{history.length > 1 ? "s" : ""} · latest {formatDate(history[0].date)}</p>
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-neutral-500">History · v{history.length}</h2>
+        <p class="mt-1 text-xs text-neutral-500">{history.length} version{history.length > 1 ? "s" : ""}{history.length > 3 ? " · last 3" : ""} · latest {formatDate(history[0].date)}</p>
         <ol class="mt-2 space-y-1.5">
-          {history.map((v, i) => (
+          {history.slice(0, 3).map((v, i) => (
             <li class="flex items-baseline gap-2 text-xs">
               <a href={v.url} target="_blank" rel="noreferrer" class="font-mono text-[11px] text-accent hover:underline">{v.shortSha}</a>
               <span class="flex-1 truncate text-neutral-700">{v.message}</span>
               <time datetime={v.date} class="shrink-0 text-[11px] text-neutral-500">{formatDate(v.date)}</time>
-              {i === 0 && <span class="rounded bg-neutral-900 px-1.5 py-0.5 text-[10px] leading-none text-white">latest</span>}
+              {i === 0 && <span class="rounded bg-neutral-900 px-1.5 py-0.5 text-[10px] leading-none text-white">v{history.length}</span>}
             </li>
           ))}
         </ol>
