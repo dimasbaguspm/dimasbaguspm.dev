@@ -11,7 +11,8 @@ const highlighter = await createHighlighter({
   langs: ["ts", "js", "bash", "json", "markdown", "css", "html"],
 });
 
-const escHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const escHtml = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 marked.use({
   renderer: {
