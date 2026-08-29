@@ -47,7 +47,7 @@ export const GET: APIRoute = async ({ params }) => {
 
   if (!title) return new Response(null, { status: 404 });
 
-  const png = await cachedBuffer(`og:${slug}`, () => renderOg(title!, subtitle, meta));
+  const png = await cachedBuffer(`og:v2:${slug}`, () => renderOg(title!, subtitle, meta));
   const body = png.buffer.slice(
     png.byteOffset,
     png.byteOffset + png.byteLength,

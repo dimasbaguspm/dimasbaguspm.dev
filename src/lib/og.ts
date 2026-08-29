@@ -18,10 +18,12 @@ function loadFont(): Promise<ArrayBuffer | null> {
 
 function loadAvatar(url: string): Promise<string | null> {
   return fetch(url)
-    .then((r) => (r.ok ? r.arrayBuffer() : null))
-    .then((b) =>
-      b ? `data:image/png;base64,${Buffer.from(b).toString("base64")}` : null,
-    )
+    .then(async (r) => {
+      if (!r.ok) return null;
+      const ct = r.headers.get("content-type")?.split(";")[0] || "image/jpeg";
+      const b = await r.arrayBuffer();
+      return `data:${ct};base64,${Buffer.from(b).toString("base64")}`;
+    })
     .catch(() => null);
 }
 
