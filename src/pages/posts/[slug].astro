@@ -20,7 +20,8 @@ const ogImage = new URL(
 <Base title={post.title} description={post.description} type="article" image={ogImage}>
   <article class="py-8">
     <Breadcrumb items={[{ label: "Articles", href: "/posts" }, { label: post.title }]} />
-    <header class="mt-4">
+    <img src={ogImage} alt={post.title} width="1200" height="630" class="mt-4 w-full rounded-lg border border-neutral-200" loading="eager" />
+    <header class="mt-6">
       <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{post.title}</h1>
       <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-neutral-500">
         <img src={profile.avatar} alt={profile.name} width="28" height="28" class="h-7 w-7 rounded-full border border-neutral-200" />
@@ -32,10 +33,6 @@ const ogImage = new URL(
         {showUpdated && lastUpdated && (
           <><span class="h-1 w-1 rounded-full bg-neutral-300"></span><span>updated {formatDate(lastUpdated)}</span></>
         )}
-        {history.length > 1 && (
-          <span class="rounded-full bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white">v{history.length}</span>
-        )}
-        <span class="rounded-full border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-medium text-neutral-700">Post</span>
       </div>
       {post.tags.length > 0 && (
         <ul class="mt-2 flex flex-wrap gap-1.5">
@@ -47,17 +44,15 @@ const ogImage = new URL(
     </header>
     <div class="prose-simple mt-8" set:html={html} />
     {history.length > 0 && (
-      <section class="mt-12 border-t border-neutral-200 pt-6">
-        <h2 class="text-sm font-semibold tracking-tight">Version history</h2>
-        <p class="mt-1 text-xs text-neutral-500">
-          {history.length} version{history.length > 1 ? "s" : ""} from git history — latest {formatDate(history[0].date)}
-        </p>
-        <ol class="mt-3 space-y-2">
+      <section class="mt-8 border-t border-neutral-200 pt-4">
+        <h2 class="text-xs font-semibold uppercase tracking-wide text-neutral-500">History</h2>
+        <p class="mt-1 text-xs text-neutral-500">{history.length} version{history.length > 1 ? "s" : ""} · latest {formatDate(history[0].date)}</p>
+        <ol class="mt-2 space-y-1.5">
           {history.map((v, i) => (
-            <li class="flex items-baseline gap-2 text-sm">
-              <a href={v.url} target="_blank" rel="noreferrer" class="font-mono text-xs text-accent hover:underline">{v.shortSha}</a>
+            <li class="flex items-baseline gap-2 text-xs">
+              <a href={v.url} target="_blank" rel="noreferrer" class="font-mono text-[11px] text-accent hover:underline">{v.shortSha}</a>
               <span class="flex-1 truncate text-neutral-700">{v.message}</span>
-              <time datetime={v.date} class="shrink-0 text-xs text-neutral-500">{formatDate(v.date)}</time>
+              <time datetime={v.date} class="shrink-0 text-[11px] text-neutral-500">{formatDate(v.date)}</time>
               {i === 0 && <span class="rounded bg-neutral-900 px-1.5 py-0.5 text-[10px] leading-none text-white">latest</span>}
             </li>
           ))}
