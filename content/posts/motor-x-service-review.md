@@ -22,4 +22,6 @@ So here is my advice if you ever service your bike here: book the slot through t
 
 Book the slot. Get the B. Skip the R. One letter turned my Saturday from a waiting room into a morning at home.
 
-![My service ticket and receipt from ASTRA Honda Jombor, August 2026](https://s3-api.dimasbaguspm.dev/personal/astra-honda-jombor-2026-08.jpg)
+Here is the proof: my service ticket (B010) and the final receipt from that August 2026 visit to ASTRA Honda Jombor. The ticket number starting with B is the part worth noticing.
+
+![My service ticket (B010) and receipt from ASTRA Honda Jombor, August 2026](https://s3-api.dimasbaguspm.dev/personal/astra-honda-jombor-2026-08.jpg)
