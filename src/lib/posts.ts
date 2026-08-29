@@ -1,7 +1,7 @@
 import { marked } from "marked";
 import { createHighlighter } from "shiki";
 import dayjs from "dayjs";
-import { OWNER, gh, listFiles, octokit, readFile } from "./github";
+import { OWNER, REPO, gh, listFiles, octokit, readFile } from "./github";
 import { cached } from "./cache";
 
 const POSTS_PATH = "content/posts";
@@ -32,6 +32,14 @@ export interface Post {
   pubDate?: string;
   tags: string[];
   body: string;
+}
+
+export interface PostVersion {
+  sha: string;
+  shortSha: string;
+  message: string;
+  date: string;
+  url: string;
 }
 
 export interface Profile {
@@ -127,6 +135,38 @@ export async function readPost(slug: string): Promise<Post | null> {
     tags,
     body,
   };
+}
+
+/** Commit history for a post — versioning via `git log` through GitHub API. */
+export async function getPostHistory(slug: string): Promise<PostVersion[]> {
+  const path = `${POSTS_PATH}/${slug}.md`;
+  return cached(`history:${slug}`, () =>
+    gh("github.getPostHistory", async () => {
+      try {
+        const { data } = await octokit.rest.repos.listCommits({
+          owner: OWNER,
+          repo: REPO,
+          path,
+          per_page: 20,
+        });
+        return data.map((c) => ({
+          sha: c.sha,
+          shortSha: c.sha.slice(0, 7),
+          message: c.commit.message.split("\n")[0],
+          date: c.commit.committer?.date ?? c.commit.author?.date ?? "",
+          url: c.html_url,
+        }));
+      } catch {
+        return [];
+      }
+    }),
+  );
+}
+
+export function estimateReadingTime(md: string): string {
+  const words = md.trim().split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.ceil(words / 200));
+  return `${mins} min read`;
 }
 
 export function renderMarkdown(md: string): string {
