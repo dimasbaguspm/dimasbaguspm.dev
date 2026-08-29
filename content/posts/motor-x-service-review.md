@@ -8,7 +8,7 @@ tags: ["review", "astra-honda", "jombor", "magelang"]
 **Place:** ASTRA Honda Jombor Magelang Street
 **Rating:** ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking ahead.
 
-Last Saturday I needed my bike serviced, so I opened the Motor X app and booked a slot for 09:00. The app gave me ticket number B010. I showed up right on time, a little early even, thinking I would be next.
+Last Saturday, in August 2026, I needed my bike serviced, so I opened the Motor X app and booked a slot for 09:00. The app gave me ticket number B010. I showed up right on time, a little early even, thinking I would be next.
 
 Here is how the morning actually went. At 09:30 the service advisor finally called me in. They took a look, told me what needed doing, and said I could go home and come back later. So I did. At 11:00 the mechanic texted that the work was done. The cashier then told me I could pick the bike up at 11:30. I rode back, paid, and by 12:10 I was home with a serviced bike.
 
@@ -20,4 +20,4 @@ That small letter made the whole difference.
 
 So here is my advice if you ever service your bike here: book the slot through the app. You get the B on your ticket, not the R. You drop the bike, go home, and come back when they call you. On a busy weekend, when the place is full of people, that B is what keeps your day short.
 
-Book the slot. Get the B. Skip the R.
+Book the slot. Get the B. Skip the R. One letter turned my Saturday from a waiting room into a morning at home.
