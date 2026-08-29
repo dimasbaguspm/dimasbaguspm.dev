@@ -1,24 +1,23 @@
 ---
-title: "Review: ASTRA Honda Jombor Magelang service, booked and smooth"
-description: "A weekend service review of ASTRA Honda Jombor Magelang. Booked a timed slot on the Motor X app, got the B ticket, and took the bike home serviced within a few hours."
+title: "My Saturday at ASTRA Honda Jombor Magelang: why I now always book ahead"
+description: "A simple, honest story of servicing my bike at ASTRA Honda Jombor Magelang, and the one habit that turned a long wait into a relaxed morning."
 pubDate: 2026-08-29
 tags: ["review", "astra-honda", "jombor", "magelang"]
 ---
 
-**Venue:** ASTRA Honda Jombor, Magelang
-**Slot:** 09:00 via Motor X — ticket **B010**
-**Verdict:** ⭐⭐⭐⭐ (4/5) — the work is great, the B ticket is the shortcut.
+**Place:** ASTRA Honda Jombor Magelang Street
+**Rating:** ⭐⭐⭐⭐ (4/5). The service is great. The trick is booking ahead.
 
-Saturday, 08:55. The workshop is already full — bikes lined up, tickets in hands. I’m there for a booked slot, B010. The guy next to me arrived at the same time, holding R014.
+Last Saturday I needed my bike serviced, so I opened the Motor X app and booked a slot for 09:00. The app gave me ticket number B010. I showed up right on time, a little early even, thinking I would be next.
 
-09:30 — service advisory calls. Not to the bay, just to say “we’ve got it, you can head home.” So I do. That’s the first win: I don’t camp in the lobby.
+Here is how the morning actually went. At 09:30 the service advisor finally called me in. They took a look, told me what needed doing, and said I could go home and come back later. So I did. At 11:00 the mechanic texted that the work was done. The cashier then told me I could pick the bike up at 11:30. I rode back, paid, and by 12:10 I was home with a serviced bike.
 
-11:00 — mechanic calls: work done. 11:30 — cashier pings: ready for pickup. I ride back, pay, and by 12:10 the bike’s home. Three calls, one coffee at home, done.
+A smooth morning, all things considered.
 
-When I come back at 11:30, R014 is still waiting to be called. Same arrival time, different letter. The B queue moved through advisory, lift, and cashier while the R queue was still waiting for its name.
+When I returned to collect the bike, I noticed something. A few people had arrived around the same time as me, but they were still sitting there waiting to be called. The difference? They had walked in without a booking, so their ticket started with **R** instead of **B**. The R queue waits for the service advisor to call names one by one. The B queue, the booked one, skips straight to the front of the line.
 
-Jombor’s hands are good — the bike felt right on the ride back. Weekends are just busy, and busy punishes the walk-in. The B doesn’t make the work faster, it just gets you *into* the work.
+That small letter made the whole difference.
 
-If you go on a weekend: book on Motor X, take the B, go home after the first call, return on the last. Don’t R it on a Saturday.
+So here is my advice if you ever service your bike here: book the slot through the app. You get the B on your ticket, not the R. You drop the bike, go home, and come back when they call you. On a busy weekend, when the place is full of people, that B is what keeps your day short.
 
-**B > R.**
+Book the slot. Get the B. Skip the R.
