@@ -115,3 +115,54 @@
 .prose-simple tbody tr:hover {
   background: #f5f5f5;
 }
+/* Mermaid diagrams — wrap + toolbar */
+.mermaid-wrap {
+  position: relative;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  margin: 1rem 0;
+  overflow: auto;
+}
+.mermaid-wrap .mermaid {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border: 0;
+  background: transparent;
+}
+.mermaid-wrap .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.15s ease;
+}
+.mermaid-toolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(6px);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  z-index: 2;
+}
+.mermaid-toolbar button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+.mermaid-toolbar button:hover { background: #f9fafb; }
+.mermaid-toolbar button:active { background: #f3f4f6; }
+.mermaid-wrap:fullscreen { padding: 1rem; overflow: auto; background: #fff; }

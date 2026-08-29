@@ -18,7 +18,7 @@ marked.use({
   renderer: {
     code({ text, lang }) {
       if (lang === "mermaid") {
-        return `<pre class="mermaid">${escHtml(text)}</pre>`;
+        return `<div class="mermaid-wrap"><pre class="mermaid">${escHtml(text)}</pre></div>`;
       }
       try {
         return highlighter.codeToHtml(text, {

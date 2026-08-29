@@ -68,9 +68,51 @@ const umamiId = process.env.UMAMI_ID;
     <Footer name={profile.name} />
     <script is:inline type="module">
       if (document.querySelector('.mermaid')) {
-        import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs').then(({ default: mermaid }) => {
+        import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs').then(async ({ default: mermaid }) => {
           mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
-          mermaid.run({ querySelector: '.mermaid' });
+          await mermaid.run({ querySelector: '.mermaid' });
+          // ponytail: toolbar uses native Fullscreen/Canvas — no deps, SVG scale via transform
+          document.querySelectorAll('.mermaid-wrap').forEach((wrap) => {
+            const mEl = wrap.querySelector('.mermaid');
+            const svg = mEl?.querySelector('svg');
+            if (!svg) return;
+            let scale = 1;
+            const apply = () => { svg.style.transform = `scale(${scale})`; svg.style.transformOrigin = 'top left'; };
+            const bar = document.createElement('div');
+            bar.className = 'mermaid-toolbar';
+            bar.innerHTML = '<button type="button" title="Zoom out" aria-label="Zoom out" data-a="out">−</button><button type="button" title="Zoom in" aria-label="Zoom in" data-a="in">+</button><button type="button" title="Reset" aria-label="Reset" data-a="reset">⊡</button><button type="button" title="Fullscreen" aria-label="Fullscreen" data-a="fs">⛶</button><button type="button" title="Export PNG" aria-label="Export PNG" data-a="png">↓</button>';
+            wrap.appendChild(bar);
+            bar.addEventListener('click', async (e) => {
+              const b = e.target.closest('button');
+              if (!b) return;
+              const a = b.dataset.a;
+              if (a === 'in') { scale = Math.min(3, +(scale + 0.2).toFixed(2)); apply(); }
+              else if (a === 'out') { scale = Math.max(0.4, +(scale - 0.2).toFixed(2)); apply(); }
+              else if (a === 'reset') { scale = 1; apply(); }
+              else if (a === 'fs') {
+                try { if (!document.fullscreenElement) await wrap.requestFullscreen(); else await document.exitFullscreen(); } catch { wrap.classList.toggle('is-fullscreen'); }
+              }
+              else if (a === 'png') {
+                const clone = svg.cloneNode(true);
+                clone.style.transform = '';
+                const s = new XMLSerializer().serializeToString(clone);
+                const blob = new Blob([s], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                const img = new Image();
+                img.onload = () => {
+                  const pad = 16;
+                  const w = img.width * 2 + pad * 2, h = img.height * 2 + pad * 2;
+                  const c = document.createElement('canvas'); c.width = w; c.height = h;
+                  const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
+                  ctx.drawImage(img, pad, pad, img.width*2, img.height*2);
+                  URL.revokeObjectURL(url);
+                  const a2 = document.createElement('a'); a2.download = 'mermaid.png'; a2.href = c.toDataURL('image/png'); a2.click();
+                };
+                img.onerror = () => URL.revokeObjectURL(url);
+                img.src = url;
+              }
+            });
+          });
         });
       }
     </script>
