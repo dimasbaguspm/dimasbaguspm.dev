@@ -5,10 +5,12 @@ pubDate: 2026-08-27
 tags: ["review", "pets", "magelang", "vet"]
 ---
 
-**Place:** Panda Pets and Care 3 (Magelang)
-**Map:** https://maps.app.goo.gl/FidEN87XKyFabCcy6
-**When:** August 2026
-**Rating:** ⭐⭐⭐⭐ (4/5). The care is excellent. The bill grows because they give good advice first.
+| | |
+|---|---|
+| **Place** | Panda Pets and Care 3 (Magelang) |
+| **Map** | https://maps.app.goo.gl/FidEN87XKyFabCcy6 |
+| **When** | August 2026 |
+| **Rating** | ⭐⭐⭐⭐ (4/5). The care is excellent. The bill grows because they give good advice first. |
 
 I took my two cats, Casper (male) and Hoki (female), to Panda Pets and Care 3 to be sterilized.
 
@@ -25,7 +27,7 @@ Long story short, both cats came home well. Casper and Hoki are fine. The servic
 
 The place itself is a bit small. That is fine. What matters is the hands and the judgment, and both are good here.
 
-Here is a look at Casper and Hoki during their time at the clinic, in Stela's care:
+Here are the images from inside the clinic, Casper and Hoki in Stela's care:
 
 ![Casper and Hoki at Panda Pets and Care 3, waiting for their turn](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-1.jpg)
 
