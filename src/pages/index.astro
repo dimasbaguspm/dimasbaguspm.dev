@@ -28,7 +28,7 @@ const ogImage = new URL(
   </section>
 
   <section>
-    <h2 class="text-xl font-semibold">Latest articles</h2>
+    <h2 class="text-xl font-semibold">Latest articles ({posts.length})</h2>
     <ul class="mt-4">
       {posts.slice(0, 5).map((a) => (
         <li class="flex flex-col py-2 sm:flex-row sm:items-baseline sm:gap-3">
@@ -47,7 +47,7 @@ const ogImage = new URL(
   </section>
 
   <section class="mt-12">
-    <h2 class="text-xl font-semibold">Projects</h2>
+    <h2 class="text-xl font-semibold">Projects ({projects.length})</h2>
     <p class="mt-1 text-sm text-neutral-500">Personal projects, straight from GitHub</p>
     {projects.length > 0 ? (
       <ul class="mt-4 grid gap-3 sm:grid-cols-2">

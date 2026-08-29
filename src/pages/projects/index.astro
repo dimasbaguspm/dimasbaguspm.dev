@@ -15,24 +15,46 @@ const ogImage = new URL(
   Astro.site ?? "https://dimasbaguspm.dev",
 ).toString();
 ---
-<Base
-  title={`Projects — ${profile.name}`}
-  description="Personal projects, tagged personal-project on GitHub."
-  image={ogImage}
->
+<Base title={`Projects — ${profile.name}`} description="Personal projects, tagged personal-project on GitHub." image={ogImage}>
   <div class="py-4">
     <Breadcrumb items={[{ label: "Projects" }]} />
-    <h1 class="mt-4 pb-8 text-2xl font-bold tracking-tight sm:text-3xl">Projects</h1>
-    <p class="flex items-center gap-1.5 pb-4 text-sm text-neutral-500">
-      Repos tagged <Pill label="personal-project" /> on GitHub.
+    <h1 class="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Projects ({repos.length})</h1>
+    <p class="mt-1 flex items-center gap-1.5 text-sm text-neutral-500">
+      {repos.length} project{repos.length !== 1 ? "s" : ""} · tagged <Pill label="personal-project" /> on GitHub
     </p>
-    <ul class="grid gap-3 sm:grid-cols-2">
+    <ul class="mt-6 grid gap-3 sm:grid-cols-2" data-project-list>
       {repos.map((repo) => <ProjectCard repo={repo} />)}
     </ul>
+    <div data-sentinel class="h-4"></div>
     {repos.length === 0 && (
-      <p class="text-neutral-500">
-        No tagged projects yet — add the <Pill label="personal-project" /> topic to a repo.
-      </p>
+      <p class="text-sm text-neutral-500">No tagged projects yet — add the <Pill label="personal-project" /> topic to a repo.</p>
     )}
   </div>
 </Base>
+
+<script>
+  const PAGE_SIZE = 6;
+  const list = document.querySelector("[data-project-list]") as HTMLElement | null;
+  const sentinel = document.querySelector("[data-sentinel]") as HTMLElement | null;
+  if (list && sentinel) {
+    const items = Array.from(list.children) as HTMLElement[];
+    let visible = PAGE_SIZE;
+    const render = () => {
+      items.forEach((li, i) => li.classList.toggle("hidden", i >= visible));
+      sentinel.classList.toggle("hidden", visible >= items.length);
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          visible += PAGE_SIZE;
+          render();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    if (items.length > PAGE_SIZE) {
+      render();
+      io.observe(sentinel);
+    }
+  }
+</script>

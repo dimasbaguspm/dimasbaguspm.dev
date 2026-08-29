@@ -43,11 +43,21 @@ if (host) {
     enableOfflineQueue: false,
   });
   let state = "connecting"; // starts non-"down" so the first failure is logged
-  redis.on("ready", () => {
+  redis.on("ready", async () => {
     ready = true;
     if (state !== "up") {
       state = "up";
       log.info("cache: redis connected", { host: sanitizeHost(host) });
+      // clean all cached on startup so deploys are fresh — no versioned keys needed
+      try {
+        const keys = await redis!.keys(PREFIX + "*");
+        if (keys.length) {
+          await redis!.del(keys);
+          log.info(`cache: flushed ${keys.length} keys on startup`);
+        }
+      } catch (e) {
+        log.warn("cache: flush failed", { error: (e as Error).message });
+      }
     }
   });
   redis.on("error", (e) => {

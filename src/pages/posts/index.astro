@@ -14,7 +14,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
   <div class="py-4">
     <Breadcrumb items={[{ label: "Articles" }]} />
     <header class="mt-4">
-      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">Articles</h1>
+      <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">Articles ({posts.length})</h1>
       <p class="mt-1 text-sm text-neutral-500">
         {posts.length} article{posts.length !== 1 ? "s" : ""} · {allTags.length} tag{allTags.length !== 1 ? "s" : ""}
       </p>
@@ -68,6 +68,7 @@ const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
         </li>
       ))}
     </ul>
+    <div data-sentinel class="h-4"></div>
     <p data-empty class="hidden rounded-lg border border-dashed border-neutral-300 px-6 py-8 text-center text-sm text-neutral-500">
       No articles for this tag.
     </p>
@@ -75,15 +76,32 @@ const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
 </Base>
 
 <script>
+  const PAGE_SIZE = 6;
   const filter = document.querySelector("[data-tag-filter]") as HTMLElement | null;
   const list = document.querySelector("[data-post-list]") as HTMLElement | null;
+  const sentinel = document.querySelector("[data-sentinel]") as HTMLElement | null;
   const empty = document.querySelector("[data-empty]") as HTMLElement | null;
-  if (filter && list) {
+  if (filter && list && sentinel) {
     const btns = Array.from(filter.querySelectorAll("[data-tag]")) as HTMLButtonElement[];
     const items = Array.from(list.children) as HTMLElement[];
-    const setActive = (tag: string) => {
+    let activeTag = "all";
+    let visibleCount = PAGE_SIZE;
+
+    const getFiltered = () =>
+      items.filter((li) => {
+        const tags = (li.dataset.tags || "").split(",").filter(Boolean);
+        return activeTag === "all" || tags.includes(activeTag);
+      });
+
+    const render = () => {
+      const filtered = getFiltered();
+      items.forEach((li) => li.classList.add("hidden"));
+      filtered.slice(0, visibleCount).forEach((li) => li.classList.remove("hidden"));
+      const hasMore = filtered.length > visibleCount;
+      sentinel.classList.toggle("hidden", !hasMore);
+      empty?.classList.toggle("hidden", filtered.length !== 0);
       btns.forEach((b) => {
-        const active = b.dataset.tag === tag;
+        const active = b.dataset.tag === activeTag;
         b.classList.toggle("bg-neutral-900", active);
         b.classList.toggle("text-white", active);
         b.classList.toggle("border-neutral-900", active);
@@ -91,15 +109,26 @@ const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
         b.classList.toggle("text-neutral-700", !active);
         b.classList.toggle("border-neutral-200", !active);
       });
-      let visible = 0;
-      items.forEach((li) => {
-        const tags = (li.dataset.tags || "").split(",").filter(Boolean);
-        const show = tag === "all" || tags.includes(tag);
-        li.classList.toggle("hidden", !show);
-        if (show) visible++;
-      });
-      empty?.classList.toggle("hidden", visible !== 0);
     };
-    btns.forEach((b) => b.addEventListener("click", () => setActive(b.dataset.tag || "all")));
+
+    btns.forEach((b) =>
+      b.addEventListener("click", () => {
+        activeTag = b.dataset.tag || "all";
+        visibleCount = PAGE_SIZE;
+        render();
+      }),
+    );
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          visibleCount += PAGE_SIZE;
+          render();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    io.observe(sentinel);
+    render();
   }
 </script>
