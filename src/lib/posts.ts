@@ -19,6 +19,16 @@ marked.use({
         theme: "github-dark",
       });
     },
+    image({ href, title, text }) {
+      const isVideo = /\.(mp4|webm|mov|mkv)$/i.test(href || "");
+      const safeHref = (href || "").replace(/"/g, "&quot;");
+      const safeText = (text || "").replace(/"/g, "&quot;");
+      const safeTitle = (title || "").replace(/"/g, "&quot;");
+      if (isVideo) {
+        return `<video src="${safeHref}" alt="${safeText}" title="${safeTitle}" controls preload="metadata" class="max-h-[480px] w-auto max-w-full rounded-lg border border-neutral-200 object-contain" data-md-media data-video></video>`;
+      }
+      return `<img src="${safeHref}" alt="${safeText}" title="${safeTitle}" loading="lazy" class="mx-auto max-h-[480px] w-auto max-w-full rounded-lg border border-neutral-200 object-contain" data-md-media />`;
+    },
   },
 });
 

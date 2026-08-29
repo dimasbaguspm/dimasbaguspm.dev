@@ -1,0 +1,158 @@
+---
+import { ChevronLeft, ChevronRight, X } from "lucide-astro";
+---
+<div
+  id="md-lightbox"
+  class="fixed inset-0 z-50 hidden flex-col bg-black/90 backdrop-blur-sm"
+  aria-hidden="true"
+>
+  <button
+    type="button"
+    data-lb-close
+    aria-label="Close"
+    class="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-neutral-900 hover:bg-white"
+  >
+    <X class="h-5 w-5" />
+  </button>
+
+  <div class="flex flex-1 items-center justify-center p-4 pt-12">
+    <button
+      type="button"
+      data-lb-prev
+      aria-label="Previous"
+      class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-neutral-900 hover:bg-white sm:left-4"
+    >
+      <ChevronLeft class="h-5 w-5" />
+    </button>
+
+    <div data-lb-stage class="flex max-h-[85vh] max-w-[95vw] items-center justify-center">
+      <img data-lb-img class="hidden max-h-[85vh] max-w-[95vw] rounded object-contain" alt="" />
+      <video data-lb-video class="hidden max-h-[85vh] max-w-[95vw] rounded" controls playsinline></video>
+    </div>
+
+    <button
+      type="button"
+      data-lb-next
+      aria-label="Next"
+      class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-neutral-900 hover:bg-white sm:right-4"
+    >
+      <ChevronRight class="h-5 w-5" />
+    </button>
+  </div>
+
+  <div
+    data-lb-thumbs
+    class="flex max-h-[96px] gap-2 overflow-x-auto border-t border-white/10 bg-black/60 p-3"
+  >
+  </div>
+</div>
+
+<script>
+  const lb = document.getElementById("md-lightbox") as HTMLElement | null;
+  if (lb) {
+    const stageImg = lb.querySelector("[data-lb-img]") as HTMLImageElement;
+    const stageVideo = lb.querySelector("[data-lb-video]") as HTMLVideoElement;
+    const thumbs = lb.querySelector("[data-lb-thumbs]") as HTMLElement;
+    const btnPrev = lb.querySelector("[data-lb-prev]") as HTMLElement;
+    const btnNext = lb.querySelector("[data-lb-next]") as HTMLElement;
+    const btnClose = lb.querySelector("[data-lb-close]") as HTMLElement;
+
+    const medias = Array.from(
+      document.querySelectorAll(".prose-simple [data-md-media]"),
+    ) as (HTMLImageElement | HTMLVideoElement)[];
+
+    if (medias.length > 0) {
+      let current = 0;
+      // build thumbs
+      medias.forEach((m, i) => {
+        const src = (m as HTMLImageElement).src || (m as HTMLVideoElement).src || m.getAttribute("src") || "";
+        const isVideo = m.tagName === "VIDEO" || /\.(mp4|webm|mov|mkv)$/i.test(src);
+        const thumbBtn = document.createElement("button");
+        thumbBtn.type = "button";
+        thumbBtn.dataset.index = String(i);
+        thumbBtn.className =
+          "h-16 w-20 shrink-0 overflow-hidden rounded border-2 border-transparent opacity-60 transition hover:opacity-100";
+        if (isVideo) {
+          thumbBtn.innerHTML = `<div class="flex h-full w-full items-center justify-center bg-neutral-800 text-[10px] text-white">▶ VIDEO</div>`;
+        } else {
+          const tImg = document.createElement("img");
+          tImg.src = src;
+          tImg.alt = "";
+          tImg.className = "h-full w-full object-cover";
+          thumbBtn.appendChild(tImg);
+        }
+        thumbBtn.addEventListener("click", () => show(i));
+        thumbs.appendChild(thumbBtn);
+      });
+      const thumbBtns = Array.from(thumbs.children) as HTMLElement[];
+
+      const show = (idx: number) => {
+        current = (idx + medias.length) % medias.length;
+        const m = medias[current];
+        const src = (m as HTMLImageElement).src || (m as HTMLVideoElement).src || m.getAttribute("src") || "";
+        const isVideo = m.tagName === "VIDEO" || /\.(mp4|webm|mov|mkv)$/i.test(src);
+        if (isVideo) {
+          stageImg.classList.add("hidden");
+          stageVideo.classList.remove("hidden");
+          stageVideo.src = src;
+          stageVideo.play().catch(() => {});
+        } else {
+          stageVideo.classList.add("hidden");
+          stageVideo.pause();
+          stageVideo.removeAttribute("src");
+          stageImg.classList.remove("hidden");
+          stageImg.src = src;
+          stageImg.alt = (m as HTMLImageElement).alt || "";
+        }
+        thumbBtns.forEach((b, i) => {
+          const active = i === current;
+          b.classList.toggle("border-white", active);
+          b.classList.toggle("opacity-100", active);
+          b.classList.toggle("opacity-60", !active);
+        });
+        // scroll thumb into view
+        thumbBtns[current]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      };
+
+      const open = (idx: number) => {
+        show(idx);
+        lb.classList.remove("hidden");
+        lb.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      };
+      const close = () => {
+        lb.classList.add("hidden");
+        lb.classList.remove("flex");
+        document.body.style.overflow = "";
+        stageVideo.pause();
+      };
+
+      medias.forEach((m, i) => {
+        m.style.cursor = "zoom-in";
+        m.addEventListener("click", () => open(i));
+      });
+
+      btnPrev.addEventListener("click", () => show(current - 1));
+      btnNext.addEventListener("click", () => show(current + 1));
+      btnClose.addEventListener("click", close);
+      lb.addEventListener("click", (e) => {
+        if (e.target === lb) close();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (lb.classList.contains("hidden")) return;
+        if (e.key === "Escape") close();
+        if (e.key === "ArrowLeft") show(current - 1);
+        if (e.key === "ArrowRight") show(current + 1);
+      });
+
+      // hide nav if single
+      if (medias.length <= 1) {
+        btnPrev.classList.add("hidden");
+        btnNext.classList.add("hidden");
+        thumbs.classList.add("hidden");
+      }
+    } else {
+      lb.remove();
+    }
+  }
+</script>

@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import MediaLightbox from "../../components/MediaLightbox.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import Tabs from "../../components/Tabs.astro";
 import PreviewCarousel from "../../components/PreviewCarousel.astro";
@@ -84,5 +85,6 @@ const ogImage = new URL(
         </div>
       </Tabs>
     </div>
+    <MediaLightbox />
   </article>
 </Base>

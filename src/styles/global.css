@@ -43,9 +43,17 @@
   padding: 0.12em 0.35em;
   font-size: 0.85em;
 }
-.prose-simple img {
+.prose-simple img,
+.prose-simple video {
   max-width: 100%;
   border-radius: 8px;
+  max-height: 480px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .prose-simple ul,
 .prose-simple ol {

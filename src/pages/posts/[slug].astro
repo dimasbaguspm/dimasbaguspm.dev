@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import MediaLightbox from "../../components/MediaLightbox.astro";
 import Pill from "../../components/Pill.astro";
 import ShareButton from "../../components/ShareButton.astro";
 import { estimateReadingTime, formatDate, getPostHistory, getProfile, readPost, renderMarkdown } from "../../lib/posts";
@@ -48,6 +49,7 @@ const ogImage = new URL(
       </div>
     </header>
     <div class="prose-simple mt-8" set:html={html} />
+    <MediaLightbox />
     {history.length > 0 && (
       <section class="mt-8 border-t border-neutral-200 pt-4">
         <h2 class="text-xs font-semibold uppercase tracking-wide text-neutral-500">History</h2>
