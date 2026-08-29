@@ -21,3 +21,5 @@ That small letter made the whole difference.
 So here is my advice if you ever service your bike here: book the slot through the app. You get the B on your ticket, not the R. You drop the bike, go home, and come back when they call you. On a busy weekend, when the place is full of people, that B is what keeps your day short.
 
 Book the slot. Get the B. Skip the R. One letter turned my Saturday from a waiting room into a morning at home.
+
+![My service ticket and receipt from ASTRA Honda Jombor, August 2026](https://s3-api.dimasbaguspm.dev/personal/astra-honda-jombor-2026-08.jpg)
