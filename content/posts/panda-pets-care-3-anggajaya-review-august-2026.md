@@ -1,13 +1,13 @@
 ---
 title: "Two cats, one lesson: why Panda Pets and Care 3 earned my trust (and my rupiah)"
-description: "A honest review of Panda Pets and Care 3 in Magelang, where I had my cats Casper and Hoki sterilized in August 2026. Smart advice, excellent care, and a bill that grew because the advice was good."
+description: "A honest review of Panda Pets and Care 3 in Anggajaya, where I had my cats Casper and Hoki sterilized in August 2026. Smart advice, excellent care, and a bill that grew because the advice was good."
 pubDate: 2026-08-27
-tags: ["review", "pets", "magelang", "vet"]
+tags: ["review", "pets", "anggajaya", "vet"]
 ---
 
 | | |
 |---|---|
-| **Place** | Panda Pets and Care 3 (Magelang) |
+| **Place** | Panda Pets and Care 3 (Anggajaya) |
 | **Map** | https://maps.app.goo.gl/FidEN87XKyFabCcy6 |
 | **When** | August 2026 |
 | **Rating** | ⭐⭐⭐⭐ (4/5). The care is excellent. The bill grows because they give good advice first. |
