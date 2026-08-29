@@ -25,19 +25,19 @@ Long story short, both cats came home well. Casper and Hoki are fine. The servic
 
 The place itself is a bit small. That is fine. What matters is the hands and the judgment, and both are good here.
 
-A quick look at the two of them, before and after:
+Here is a look at Casper and Hoki during their time at the clinic, in Stela's care:
 
-![Casper and Hoki, my two cats, relaxing at home](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-1.jpg)
+![Casper and Hoki at Panda Pets and Care 3, waiting for their turn](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-1.jpg)
 
-![Hoki, the female, curled up and calm](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-2.jpg)
+![Hoki, the female, settled at the clinic](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-2.jpg)
 
-![Casper, the male, watching from his spot](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-3.jpg)
+![Casper, the male, at the clinic during his visit](https://s3-api.dimasbaguspm.dev/personal/cats-casper-hoki-3.jpg)
 
-And here they are at the clinic, in Stela's care:
+And two short clips from the visits:
 
-![Casper at Panda Pets and Care 3 during his visit](https://s3-api.dimasbaguspm.dev/personal/cats-casper-clinic.mp4)
+![Casper at Panda Pets and Care 3](https://s3-api.dimasbaguspm.dev/personal/cats-casper-clinic.mp4)
 
-![Hoki at Panda Pets and Care 3, settled in for her turn](https://s3-api.dimasbaguspm.dev/personal/cats-hoki-clinic.mp4)
+![Hoki at Panda Pets and Care 3](https://s3-api.dimasbaguspm.dev/personal/cats-hoki-clinic.mp4)
 
 If you bring a cat in for one thing, expect them to suggest the steps that make that one thing safer. Listen to Stela. The advice costs more up front, but the cats end up better for it.
 
