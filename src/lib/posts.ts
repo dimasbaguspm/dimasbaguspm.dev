@@ -11,13 +11,25 @@ const highlighter = await createHighlighter({
   langs: ["ts", "js", "bash", "json", "markdown", "css", "html"],
 });
 
+const escHtml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 marked.use({
   renderer: {
     code({ text, lang }) {
-      return highlighter.codeToHtml(text, {
-        lang: lang || "text",
-        theme: "github-dark",
-      });
+      if (lang === "mermaid") {
+        return `<pre class="mermaid">${escHtml(text)}</pre>`;
+      }
+      try {
+        return highlighter.codeToHtml(text, {
+          lang: lang || "text",
+          theme: "github-dark",
+        });
+      } catch {
+        return highlighter.codeToHtml(text, {
+          lang: "text",
+          theme: "github-dark",
+        });
+      }
     },
     image({ href, title, text }) {
       const isVideo = /\.(mp4|webm|mov|mkv)$/i.test(href || "");
