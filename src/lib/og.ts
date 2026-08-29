@@ -31,6 +31,18 @@ function trunc(s: string, n: number): string {
   return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s;
 }
 
+// Glossy black gradient with deterministic random orientation from title length
+function glossyGradient(title: string): string {
+  const angles = [30, 65, 115, 135, 165, 210, 250, 310];
+  const angle = angles[title.length % angles.length];
+  // hash adds second dimension so same length titles still differ
+  const hash = [...title].reduce((a, c) => a + c.charCodeAt(0), 0);
+  if (hash % 2 === 0) {
+    return `linear-gradient(${angle}deg, #050507 0%, #161b22 22%, #0a0a0a 48%, #1a1f2e 78%, #000000 100%)`;
+  }
+  return `linear-gradient(${angle}deg, #000000 0%, #0d1117 28%, #1c2128 52%, #010409 100%)`;
+}
+
 /** GitHub-style 1200×630 social preview: avatar + type + title(2 lines) + metadata. */
 export async function renderOg(
   title: string,
@@ -73,8 +85,7 @@ export async function renderOg(
       display: "flex",
       width: 1200,
       height: 630,
-      background:
-        "linear-gradient(135deg, #161b22 0%, #0d1117 55%, #010409 100%)",
+      background: glossyGradient(title),
       padding: "48px 56px",
       flexDirection: "column",
       justifyContent: "space-between",

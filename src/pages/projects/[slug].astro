@@ -31,12 +31,11 @@ const ogImage = new URL(
   description={repo.description ?? undefined}
   image={ogImage}
 >
-  <article class="py-8">
+  <article class="py-4">
     <Breadcrumb
       items={[{ label: "Projects", href: "/projects" }, { label: repo.name }]}
     />
-    <img src={ogImage} alt={repo.name} width="1200" height="630" class="mt-4 w-full rounded-lg border border-neutral-200" loading="eager" />
-    <header class="mt-6">
+    <header class="mt-4">
       <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{repo.name}</h1>
       <p class="mt-2 text-neutral-600">{repo.description}</p>
       <p class="mt-3 flex flex-wrap items-center gap-3 text-xs text-neutral-500">
