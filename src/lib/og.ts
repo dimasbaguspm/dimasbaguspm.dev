@@ -35,7 +35,12 @@ function trunc(s: string, n: number): string {
 export async function renderOg(
   title: string,
   subtitle?: string | null,
-  meta?: { type?: string | null; author?: string | null; date?: string | null; readingTime?: string | null },
+  meta?: {
+    type?: string | null;
+    author?: string | null;
+    date?: string | null;
+    readingTime?: string | null;
+  },
 ): Promise<Buffer> {
   const profile = await getProfile();
   const [fontData, avatar] = await Promise.all([
@@ -59,14 +64,17 @@ export async function renderOg(
   const rawTitle = trunc(title, title.length > 80 ? 110 : 90);
   const rawSubtitle = subtitle ? trunc(subtitle, 120) : null;
 
-  const metaLine = [author && `by ${author}`, date, readingTime].filter(Boolean).join("  •  ");
+  const metaLine = [author && `by ${author}`, date, readingTime]
+    .filter(Boolean)
+    .join("  •  ");
 
   const node = h("div", {
     style: {
       display: "flex",
       width: 1200,
       height: 630,
-      background: "linear-gradient(135deg, #161b22 0%, #0d1117 55%, #010409 100%)",
+      background:
+        "linear-gradient(135deg, #161b22 0%, #0d1117 55%, #010409 100%)",
       padding: "48px 56px",
       flexDirection: "column",
       justifyContent: "space-between",
@@ -74,7 +82,11 @@ export async function renderOg(
     children: [
       // header: avatar + name
       h("div", {
-        style: { display: "flex", alignItems: "center", justifyContent: "space-between" },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        },
         children: [
           h("div", {
             style: { display: "flex", alignItems: "center", gap: "16px" },
@@ -91,12 +103,25 @@ export async function renderOg(
                 children: [
                   h(
                     "div",
-                    { style: { display: "flex", color: "#e6edf3", fontSize: 22, fontWeight: 700 } },
+                    {
+                      style: {
+                        display: "flex",
+                        color: "#e6edf3",
+                        fontSize: 22,
+                        fontWeight: 700,
+                      },
+                    },
                     profile.name,
                   ),
                   h(
                     "div",
-                    { style: { display: "flex", color: "#8b949e", fontSize: 16 } },
+                    {
+                      style: {
+                        display: "flex",
+                        color: "#8b949e",
+                        fontSize: 16,
+                      },
+                    },
                     `@${profile.login}`,
                   ),
                 ],
@@ -104,19 +129,23 @@ export async function renderOg(
             ],
           }),
           type &&
-            h("div", {
-              style: {
-                display: "flex",
-                background: "#238636",
-                color: "#ffffff",
-                fontSize: 13,
-                fontWeight: 700,
-                letterSpacing: 0.8,
-                padding: "6px 12px",
-                borderRadius: 999,
-                textTransform: "uppercase",
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  background: "#238636",
+                  color: "#ffffff",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  letterSpacing: 0.8,
+                  padding: "6px 12px",
+                  borderRadius: 999,
+                  textTransform: "uppercase",
+                },
               },
-            }, type),
+              type,
+            ),
         ],
       }),
       // center: title + subtitle
@@ -131,29 +160,37 @@ export async function renderOg(
           paddingBottom: "24px",
         },
         children: [
-          h("div", {
-            style: {
-              display: "flex",
-              color: "#f0f6fc",
-              fontSize: rawTitle.length > 60 ? 46 : 54,
-              fontWeight: 700,
-              lineHeight: 1.15,
-              maxWidth: 1088,
-              // satori line clamp via truncation above; keep overflow hidden for safety
-              overflow: "hidden",
-            },
-          }, rawTitle),
-          rawSubtitle &&
-            h("div", {
+          h(
+            "div",
+            {
               style: {
                 display: "flex",
-                color: "#8b949e",
-                fontSize: 24,
-                lineHeight: 1.35,
-                maxWidth: 960,
+                color: "#f0f6fc",
+                fontSize: rawTitle.length > 60 ? 46 : 54,
+                fontWeight: 700,
+                lineHeight: 1.15,
+                maxWidth: 1088,
+                // satori line clamp via truncation above; keep overflow hidden for safety
                 overflow: "hidden",
               },
-            }, rawSubtitle),
+            },
+            rawTitle,
+          ),
+          rawSubtitle &&
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  color: "#8b949e",
+                  fontSize: 24,
+                  lineHeight: 1.35,
+                  maxWidth: 960,
+                  overflow: "hidden",
+                },
+              },
+              rawSubtitle,
+            ),
         ],
       }),
       // footer: metadata
@@ -166,12 +203,20 @@ export async function renderOg(
           paddingTop: "16px",
         },
         children: [
-          h("div", {
-            style: { display: "flex", color: "#8b949e", fontSize: 16 },
-          }, metaLine || `dimasbaguspm.dev`),
-          h("div", {
-            style: { display: "flex", color: "#484f58", fontSize: 14 },
-          }, "dimasbaguspm.dev"),
+          h(
+            "div",
+            {
+              style: { display: "flex", color: "#8b949e", fontSize: 16 },
+            },
+            metaLine || `dimasbaguspm.dev`,
+          ),
+          h(
+            "div",
+            {
+              style: { display: "flex", color: "#484f58", fontSize: 14 },
+            },
+            "dimasbaguspm.dev",
+          ),
         ],
       }),
     ],

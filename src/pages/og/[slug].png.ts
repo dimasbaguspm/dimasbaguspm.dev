@@ -1,5 +1,11 @@
 import type { APIRoute } from "astro";
-import { estimateReadingTime, formatDate, getPostHistory, getProfile, readPost } from "../../lib/posts";
+import {
+  estimateReadingTime,
+  formatDate,
+  getPostHistory,
+  getProfile,
+  readPost,
+} from "../../lib/posts";
 import { getProject } from "../../lib/projects";
 import { cachedBuffer } from "../../lib/cache";
 import { renderOg } from "../../lib/og";
@@ -13,7 +19,12 @@ export const GET: APIRoute = async ({ params }) => {
 
   let title: string | null = null;
   let subtitle: string | null = null;
-  let meta: { type?: string | null; author?: string | null; date?: string | null; readingTime?: string | null } = {};
+  let meta: {
+    type?: string | null;
+    author?: string | null;
+    date?: string | null;
+    readingTime?: string | null;
+  } = {};
 
   if (slug === "home" || slug === "posts" || slug === "projects") {
     const profile = await getProfile();
@@ -24,9 +35,16 @@ export const GET: APIRoute = async ({ params }) => {
     };
     title = labels[slug];
     if (slug === "home") subtitle = profile.bio;
-    meta = { type: slug === "home" ? null : slug === "posts" ? "Posts" : "Projects", author: profile.name };
+    meta = {
+      type: slug === "home" ? null : slug === "posts" ? "Posts" : "Projects",
+      author: profile.name,
+    };
   } else {
-    const [post, repo, profile] = await Promise.all([readPost(slug), getProject(slug), getProfile()]);
+    const [post, repo, profile] = await Promise.all([
+      readPost(slug),
+      getProject(slug),
+      getProfile(),
+    ]);
     if (post) {
       const history = await getPostHistory(slug);
       const last = history[0]?.date ?? post.pubDate ?? null;
@@ -47,7 +65,9 @@ export const GET: APIRoute = async ({ params }) => {
 
   if (!title) return new Response(null, { status: 404 });
 
-  const png = await cachedBuffer(`og:v2:${slug}`, () => renderOg(title!, subtitle, meta));
+  const png = await cachedBuffer(`og:v2:${slug}`, () =>
+    renderOg(title!, subtitle, meta),
+  );
   const body = png.buffer.slice(
     png.byteOffset,
     png.byteOffset + png.byteLength,
