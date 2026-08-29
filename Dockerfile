@@ -4,7 +4,7 @@ RUN corepack enable && corepack prepare pnpm@10.34.5 --activate
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm run build
+RUN if [ -d dist ]; then echo "reuse dist from CI artifact"; else pnpm run build; fi
 
 FROM node:22-alpine AS deps
 WORKDIR /app
