@@ -23,4 +23,14 @@ Here is a piece of that day:
 
 ![Family time at Jogja City Mall for my 26th birthday](https://s3-api.dimasbaguspm.dev/personal/birthday-26-jogja-city-mall.jpg)
 
+The day actually started at midnight. At 00.00 I held a small tart cake with Casper beside me. No big party, just a quiet start to being 26.
+
+![Midnight on my 26th birthday, holding a small tart cake with Casper](https://s3-api.dimasbaguspm.dev/personal/birthday-26-cake-casper-midnight.jpg)
+
+Later we went for a meal at Oseng Ndeso. I took a selfie with Mom there, and the food itself was worth remembering.
+
+![Selfie with Mom at Oseng Ndeso](https://s3-api.dimasbaguspm.dev/personal/birthday-26-mom-oseng-ndeso-selfie.jpg)
+
+![Food at Oseng Ndeso](https://s3-api.dimasbaguspm.dev/personal/birthday-26-oseng-ndeso-food.jpg)
+
 26 taught me this: enough is already a lot, and being grateful is how you notice it.
